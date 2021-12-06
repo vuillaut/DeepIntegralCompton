@@ -1,7 +1,37 @@
 import numpy as np
+import pandas as pd
+from pathlib import Path
 
 
-#UTILITAIRES
+def load_data(filename):
+    '''
+    load data as pandas dataframe
+
+    :param filename: str
+        path to the .npy file to load
+    :return:
+        dataframe, theta, phi
+    '''
+    array = np.load(filename)
+    header = ['e1', 'e2', 'yy1', 'zz1', 'yy2', 'zz2', 'y1', 'z1', 'y2', 'z2']
+    df = pd.DataFrame(array, columns=header)
+    tp = Path(filename).with_suffix('').name.split('_')
+    theta = int(tp[1])
+    phi = int(tp[3])
+    return df, theta, phi
+
+
+def energy_compton(energy_0):
+    """
+    energy Compton
+
+    :param energy_0: float
+        energy0 in keV
+    :return:
+    """
+    electron_mass = 511 #keV
+    return energy_0/(1+2*energy_0/electron_mass)
+
 
 def cottheta(E1, E2): #calcul de la cotangente de l'angle Compton
 
