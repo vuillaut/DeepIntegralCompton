@@ -18,7 +18,6 @@ setup(
     long_description_content_type='text/markdown',
     install_requires=[
         'numpy',
-        'pathlib',
         'matplotlib',
         'pandas'
     ],
@@ -30,4 +29,6 @@ setup(
     url='https://github.com/vuillaut/DeepIntegralCompton',
     license='MIT',
     entry_points=entry_points,
+    include_package_data=True,
+    package_data={'deepcompton': ['data/*']}
 )
