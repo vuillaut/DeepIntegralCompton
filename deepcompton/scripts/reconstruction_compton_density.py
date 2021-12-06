@@ -1,9 +1,12 @@
-import matplotlib.pyplot as plt
-import numpy as np
-import deepcompton.utils as compton
 import sys
 import os
+import matplotlib.pyplot as plt
+import numpy as np
 import pkg_resources
+
+import deepcompton.utils as compton
+from deepcompton import constants
+from deepcompton import vizualisation as viz
 
 # if user has provided a source theta and phi value use it, otherwise use defaults
 if len(sys.argv)==3:
@@ -17,8 +20,8 @@ else:
 plt.rcParams.update({"font.size": 14})
 Ee = 511
 
-z_isgri = 0
-z_picsit = -8.68
+z_isgri = constants.x_isgri
+z_picsit = constants.x_picsit
 
 
 name = pkg_resources.resource_filename('deepcompton', f'data/theta_{theta_source}_phi_{phi_source}.npy')
@@ -41,12 +44,12 @@ spectre = np.histogram(sumenerg, bins = 2000,range = (0,2000))
 
 s = np.size(pos1x)
 
-precisiondensite = 2.
-precision = 5000.
+precisiondensite = constants.precisiondensite
+precision = constants.precision
+r = constants.r_infinite
 
 densite = np.zeros((int(360/precisiondensite),int(90/precisiondensite)))
 
-r = 100000000000000.
 
 ncones = 0
 
@@ -117,40 +120,15 @@ np.savetxt(f'reco_theta_{theta_source}_phi_{phi_source}.txt',
            header='index cotheta theta phi',
            fmt='%.4e'
            )
-        
-# fig = plt.figure()
-# ax = fig.add_subplot(111,projection = "hammer")
-# cax = plt.imshow(np.transpose(densite), cmap ="hot",extent = [-90,90 + 180,-90,90], interpolation = None)
-# plt.xlabel("Longitude Phi (degrés)")
-# plt.ylabel("Colatitude Theta (degrés)")
-# plt.title("Données INTEGRAL")
 
-
-# plt.grid()
-
-# cbar = fig.colorbar(cax, label = "Nombre d'intersections de cônes")
-# plt.show()
 
 actual = np.radians(np.linspace(0, 360, 180))
 expected = np.arange(0, 90, 2)
  
-r_g, theta_g = np.meshgrid(expected,actual)
-values = densite
- 
-fig, ax = plt.subplots(figsize = (12,9),subplot_kw=dict(projection='polar'))
-# cax = ax.contourf(theta_g, r_g, values,cmap = "hot")
-cax = ax.pcolormesh(theta_g, r_g, values,cmap = "hot")
-cbar = fig.colorbar(cax,label = "Nombre d'intersections de cônes")
-ax.scatter(np.radians(phi_source),theta_source,label = "Position simulée")
+r_g, theta_g = np.meshgrid(expected, actual)
 
-tt = ax.get_yticklabels()
-list_tt = np.linspace(90/np.size(tt),90,np.size(tt))
-for i in range(np.size(tt)):
-    tt[i].set_text(str(int(list_tt[i]))+"°")
-    tt[i].set_color("grey")
-    tt[i].set_fontweight(900)
-ax.set_yticklabels(tt)
-plt.legend()
-plt.show()
-plt.grid()
+ax = viz.plot_backprojeted(theta_g, r_g, densite)
+ax = viz.plot_source_pos(theta_source, np.radians(phi_source), ax=ax)
+
 plt.tight_layout()
+plt.show()
