@@ -14,14 +14,12 @@ else:
     phi_source = 104
 
 
-plt.rcParams.update({"font.size":14})
+plt.rcParams.update({"font.size": 14})
 Ee = 511
 
 z_isgri = 0
 z_picsit = -8.68
 
-
-# name = "./save_Compton/theta_"+str(theta_source)+"_phi_"+str(phi_source)+".npy"
 
 name = pkg_resources.resource_filename('deepcompton', f'data/theta_{theta_source}_phi_{phi_source}.npy')
 
@@ -52,16 +50,14 @@ r = 100000000000000.
 
 ncones = 0
 
+indexes = []
+cothetas = []
+phis = []
+thetas = []
+
 for i in range(s):
     
     if ncones < 2000000:
-        # x1cur = pos1x[i]
-        # y1cur = pos1y[i]
-        # z1cur = z_isgri
-        
-        # x2cur = pos2x[i]
-        # y2cur = pos2y[i]
-        # z2cur = z_picsit
         
         x1cur = z_isgri
         y1cur = pos1y[i]
@@ -90,6 +86,11 @@ for i in range(s):
             
             colat = compton.colatconer(r, x1cur, y1cur, z1cur, theta, phi, cotheta, precision) 
             longit = compton.longitconer(r, x1cur, y1cur, z1cur, theta, phi, cotheta, precision)
+
+            indexes.append(i)
+            cothetas.append(cotheta)
+            thetas.append(theta)
+            phis.append(phi)
             
             hemisphere = (colat < 90)
             longit = longit[hemisphere]
@@ -109,7 +110,13 @@ for i in range(s):
     
         if(i%100==0):
             print(i)
-        
+
+
+np.savetxt(f'reco_theta_{theta_source}_phi_{phi_source}.txt',
+           np.transpose([indexes, cothetas, thetas, phis]),
+           header='index cotheta theta phi',
+           fmt='%.4e'
+           )
         
 # fig = plt.figure()
 # ax = fig.add_subplot(111,projection = "hammer")
