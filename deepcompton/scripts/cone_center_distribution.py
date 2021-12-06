@@ -1,15 +1,17 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import compton2.utils as compton
+import deepcompton.utils as compton
+from deepcompton import constants
 
 plt.rcParams.update({"font.size":14})
-Ee = 511
+Ee = constants.electron_mass
 
-z_isgri = 0
-z_picsit = -8.68
+z_isgri = constants.x_isgri
+z_picsit = constants.x_picsit
 
-theta_source = 48
-phi_source = 88
+theta_source = 42
+phi_source = 104
+name = compton.get_test_data_path()
 
 
 def make_cones(x):
@@ -57,8 +59,6 @@ def make_cone(x, z_isgri, z_picsit):
         longit = compton.longitconer(r, x1cur, y1cur, z1cur, theta, phi, cotheta, precision)
             
 
-         
-name = "./save_Compton/theta_"+str(theta_source)+"_phi_"+str(phi_source)+".npy"
 extraction = np.load(name).astype("float64")
 
 pos1x = extraction[:,6]
@@ -75,14 +75,14 @@ spectre = np.histogram(sumenerg, bins = 2000,range = (0,2000))
 s = np.size(pos1x)
 
 # mesurement precision
-precisiondensite = 2.
-precision = 5000.
+precisiondensite = constants.precisiondensite
+precision = constants.precision
 
 # density grid
 densite = np.zeros((int(360/precisiondensite),int(90/precisiondensite)))
 
 # ??
-r = 100000000000000.
+r = constants.r_infinite
 
 # cone counter
 ncones = 0
