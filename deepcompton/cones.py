@@ -37,7 +37,7 @@ def make_cone(x, z_isgri, z_picsit, Ee=511):
     return None
 
 
-def make_cone_density(theta_source, phi_source, z_isgri, z_picsit, precision=5000., density_precision=2., r=1e14, max_cones=2000000, lon_max=360., lat_max=90.):
+def make_cone_density(theta_source, phi_source, z_isgri, z_picsit, precision=5000., density_precision=2., r=1e14, max_cones=2000000, lon_max=360., lat_max=90.,progress=True):
     name = "./save_Compton/theta_"+str(theta_source)+"_phi_"+str(phi_source)+".npy"
     X = np.load(name).astype(np.float64)
     N = X.shape[0]
@@ -52,8 +52,9 @@ def make_cone_density(theta_source, phi_source, z_isgri, z_picsit, precision=500
     ncones = 0
     
     # for each row in the data create a cone
-    progress_msg = "Loading cones, theta:{}, phi:{}".format(theta_source,phi_source)
-    printProgressBar(0, N, prefix = progress_msg, suffix = 'Complete', length = 50)
+    if progress:
+        progress_msg = "Loading cones, theta:{}, phi:{}".format(theta_source,phi_source)
+        printProgressBar(0, N, prefix = progress_msg, suffix = 'Complete', length = 50)
     for i in range(N):
         # while cone count is not reached
         if ncones < max_cones:
@@ -84,6 +85,7 @@ def make_cone_density(theta_source, phi_source, z_isgri, z_picsit, precision=500
                 density += d
                 
                 ncones += 1
-        printProgressBar(i + 1, N, prefix = progress_msg, suffix = 'Complete', length = 50) 
+        if progress:
+            printProgressBar(i + 1, N, prefix = progress_msg, suffix = 'Complete', length = 50) 
     return density
  
