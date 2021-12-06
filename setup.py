@@ -1,6 +1,7 @@
 import re
 from setuptools import setup, find_packages
 from pathlib import Path
+import os
 
 
 entry_points = {'console_scripts': []}
@@ -10,6 +11,7 @@ this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 __version__ = open(Path(this_directory).joinpath('deepcompton/version.py'))
 
+
 setup(
     name='deepcompton',
     version=__version__,
@@ -18,6 +20,9 @@ setup(
     long_description_content_type='text/markdown',
     install_requires=[
         'numpy',
+        'pathlib',
+        'matplotlib',
+        'pandas'
     ],
     packages=find_packages(),
     scripts=[],
@@ -27,5 +32,4 @@ setup(
     url='https://github.com/vuillaut/DeepIntegralCompton',
     license='MIT',
     entry_points=entry_points,
-    package_data={}
 )
