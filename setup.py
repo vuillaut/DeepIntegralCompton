@@ -2,7 +2,9 @@ from setuptools import setup, find_packages
 from pathlib import Path
 import re
 
-entry_points = {'console_scripts': []}
+entry_points = {'console_scripts': [
+    'deepcompton-reco-compton-density = deepcompton.scripts.reconstruction_compton_density:main',
+]}
 
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
