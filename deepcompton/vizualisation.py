@@ -50,6 +50,7 @@ def plot_backprojeted(theta_g, r_g, density, figsize=(12, 9)):
     :return:
     """
     fig, ax = plt.subplots(figsize=figsize, subplot_kw=dict(projection='polar'))
+    ax.grid(False)
     cax = ax.pcolormesh(theta_g, r_g, density, cmap="hot")
     cbar = fig.colorbar(cax, label="Number of intersecting cones")
 
