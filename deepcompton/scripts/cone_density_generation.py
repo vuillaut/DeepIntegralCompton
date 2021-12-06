@@ -11,13 +11,28 @@ z_isgri = 0
 z_picsit = -8.68
 
 # get cone density data for all files in dataset
-data=[]
-for f in os.listdir("save_Compton"):
+from multiprocessing import Pool, Manager
+manager = Manager()
+labels,data=manager.list(),manager.list()
+
+def get_data(f):
+    print("Loading from {}".format(f))
     if f.endswith(".npy"):
         _,theta_source,_,phi_source=f.replace(".npy","").split("_")
-        data.append(make_cone_density(theta_source, phi_source,z_isgri, z_picsit))
-pkl.dump(data, open("cone_density_data_full.pkl","wb"))
+        labels.append([theta_source, phi_source])
+        data.append(make_cone_density(theta_source, phi_source,z_isgri, z_picsit, progress=False))
+
+
+with Pool(maxtasksperchild=10) as p:
+    for t in p.imap(get_data, os.listdir("save_Compton"), chunksize=365):
+        pass
+
+
+
+pkl.dump((list(labels),list(data)), open("cone_density_data_full.pkl","wb"))
+
 exit()
+
 
 density = make_cone_density(theta_source, phi_source)
 print(density.shape)
