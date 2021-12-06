@@ -1,6 +1,17 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import Utilitaires_Compton as compton
+import deepcompton.utils as compton
+import sys
+import os
+
+# if user has provided a source theta and phi value use it, otherwise use defaults
+if len(sys.argv)==3:
+    theta_source = int(sys.argv[1])
+    phi_source = int(sys.argv[2])
+else:
+    theta_source = 48
+    phi_source = 88
+
 
 plt.rcParams.update({"font.size":14})
 Ee = 511
@@ -8,10 +19,11 @@ Ee = 511
 z_isgri = 0
 z_picsit = -8.68
 
-theta_source = 48
-phi_source = 88
 
 name = "./save_Compton/theta_"+str(theta_source)+"_phi_"+str(phi_source)+".npy"
+if not os.path.exists(name):
+    print("File {} not found. Exiting".format(name))
+    exit()
 extraction = np.load(name).astype("float64")
 
 pos1x = extraction[:,6]
@@ -88,7 +100,6 @@ for i in range(s):
             densite = densite + d
             
             ncones += 1
-            break
             
 
     
