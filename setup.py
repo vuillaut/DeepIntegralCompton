@@ -1,7 +1,5 @@
-import re
 from setuptools import setup, find_packages
 from pathlib import Path
-import os
 
 
 entry_points = {'console_scripts': []}
