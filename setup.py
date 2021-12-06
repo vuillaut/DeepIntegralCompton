@@ -1,18 +1,22 @@
 from setuptools import setup, find_packages
 from pathlib import Path
-
+import re
 
 entry_points = {'console_scripts': []}
 
-
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
-exec(open(Path(this_directory).joinpath('deepcompton/version.py')).read())
+
+
+def get_property(prop, project):
+    result = re.search(r'{}\s*=\s*[\'"]([^\'"]*)[\'"]'.format(prop),
+                       open(project + '/version.py').read())
+    return result.group(1)
 
 
 setup(
     name='deepcompton',
-    version=__version__,
+    version=get_property('__version__', 'deepcompton'),
     description="Deep learning for Integral event reconstruction",
     long_description=long_description,
     long_description_content_type='text/markdown',
