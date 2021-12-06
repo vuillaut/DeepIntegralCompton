@@ -3,14 +3,15 @@ import numpy as np
 import deepcompton.utils as compton
 import sys
 import os
+import pkg_resources
 
 # if user has provided a source theta and phi value use it, otherwise use defaults
 if len(sys.argv)==3:
     theta_source = int(sys.argv[1])
     phi_source = int(sys.argv[2])
 else:
-    theta_source = 48
-    phi_source = 88
+    theta_source = 42
+    phi_source = 104
 
 
 plt.rcParams.update({"font.size":14})
@@ -20,7 +21,10 @@ z_isgri = 0
 z_picsit = -8.68
 
 
-name = "./save_Compton/theta_"+str(theta_source)+"_phi_"+str(phi_source)+".npy"
+# name = "./save_Compton/theta_"+str(theta_source)+"_phi_"+str(phi_source)+".npy"
+
+name = pkg_resources.resource_filename('deepcompton', f'data/theta_{theta_source}_phi_{phi_source}.npy')
+
 if not os.path.exists(name):
     print("File {} not found. Exiting".format(name))
     exit()
