@@ -1,17 +1,19 @@
 import numpy as np
 import pandas as pd
 from pathlib import Path
+import pkg_resources
+from . import constants
 
 
 def load_data(filename):
-    '''
+    """
     load data as pandas dataframe
 
     :param filename: str
         path to the .npy file to load
-    :return:
-        dataframe, theta, phi
-    '''
+    :return: (pandas.DataFrame, float, float)
+        data, theta, phi
+    """
     array = np.load(filename)
     header = ['e1', 'e2', 'yy1', 'zz1', 'yy2', 'zz2', 'y1', 'z1', 'y2', 'z2']
     df = pd.DataFrame(array, columns=header)
@@ -29,8 +31,7 @@ def energy_compton(energy_0):
         energy0 in keV
     :return:
     """
-    electron_mass = 511 #keV
-    return energy_0/(1+2*energy_0/electron_mass)
+    return energy_0/(1+2*energy_0/constants.electron_mass)
 
 
 def cottheta(E1, E2): #calcul de la cotangente de l'angle Compton
@@ -334,3 +335,7 @@ def longitconer(r, xa, ya, za, theta, phi, cotheta, precision): #;calcul de la l
     longit = longitude*180./np.pi
 
     return longit
+
+
+def get_test_data_path():
+    return pkg_resources.resource_filename(__name__, 'data/theta_42_phi_104.npy')
