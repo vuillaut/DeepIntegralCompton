@@ -1,6 +1,8 @@
 # DeepIntegralCompton
 Deep Learning applied to Integral data analysis
 
+![tests](https://github.com/vuillaut/DeepIntegralCompton/actions/workflows/unit_tests.yml/badge.svg)
+
 ## Module installation
 
 Move to the root directory of the project and execute :
