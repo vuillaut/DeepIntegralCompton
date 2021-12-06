@@ -1,0 +1,15 @@
+name: deepgral
+channels:
+  - default
+  - pytorch
+  - conda-forge
+dependencies:
+  - jupyterlab
+  - numpy
+  - pandas
+  - matplotlib
+  - pytorch
+  - torchvision
+  - torchaudio 
+  - tensorboard
+  - pytorch-lightning
