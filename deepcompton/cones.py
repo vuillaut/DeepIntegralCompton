@@ -54,7 +54,7 @@ def make_cone(x, z_isgri=constants.x_isgri, z_picsit=constants.x_picsit, Ee=cons
 
 
 def make_cone_density(theta_source, phi_source, z_isgri, z_picsit, precision=5000., density_precision=2., r=1e14,
-                      max_cones=2000000, lon_max=360., lat_max=90., progress=True, datadir=None):
+                      max_cones=2000000, lon_max=360., lat_max=90., progress=True, datadir=None, n_events=None):
     if datadir is None:
         name = "./save_Compton/theta_" + str(theta_source) + "_phi_" + str(phi_source) + ".npy"
     else:
@@ -62,10 +62,19 @@ def make_cone_density(theta_source, phi_source, z_isgri, z_picsit, precision=500
 
     X = np.load(name).astype(np.float64)
     N = X.shape[0]
+           
     # if empty data return None
     if N == 0:
         return None
 
+    if n_events is not None:
+        if isinstance(n_events, list):
+            # randomly select number of events to use
+            n = np.random.choice(range(n_events[0], n_events[1]+1))
+            pos = np.random.choice(range(N), size=n)
+            X = X[pos]
+            N = n
+ 
     # density grid
     density = np.zeros((int(lon_max / density_precision), int(lat_max / density_precision)))
 
