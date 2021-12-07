@@ -10,15 +10,15 @@ this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
 
-def get_property(prop, project):
+def get_version(prop, directory):
     result = re.search(r'{}\s*=\s*[\'"]([^\'"]*)[\'"]'.format(prop),
-                       open(project + '/version.py').read())
+                       open(directory + '/version.py').read())
     return result.group(1)
 
 
 setup(
     name='deepcompton',
-    version=get_property('__version__', 'deepcompton'),
+    version=get_version('__version__', this_directory.joinpath('deepcompton').as_posix()),
     description="Deep learning for Integral event reconstruction",
     long_description=long_description,
     long_description_content_type='text/markdown',
