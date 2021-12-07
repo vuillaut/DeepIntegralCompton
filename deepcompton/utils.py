@@ -297,10 +297,31 @@ def coordconezr(r, xa, ya, za, ct, st, cp, sp, cotheta, alpha): #;ct = cos(theta
 
     return z
 
+def coordconer(r, xa, ya, za, ct, st, cp, sp, cotheta, alpha):
+    ca = np.cos(alpha)
+    sa = np.sin(alpha)
+
+    kx = ct*cotheta-st*ca
+    ky = cp*(st*cotheta+ct*ca)-sp*sa
+    kz = sp*(st*cotheta+ct*ca)+cp*sa
+
+    a = kx**2 + ky**2 + kz**2
+    b = 2*(kx*xa + ky*ya + kz*za)
+    c = xa**2 + ya**2 + za**2 - r**2
+
+    delta = b**2 - 4*a*c
+
+    rho = (-b + np.sqrt(delta))/(2.*a)
+    x = rho*(ct*cotheta-st*ca) + xa
+    y = rho*(cp*(st*cotheta+ct*ca)-sp*sa) + ya
+    z = rho*(sp*(st*cotheta+ct*ca)+cp*sa) + za
+
+    return x,y,z
+
+
+
 def colatconer(r, xa, ya, za, theta, phi, cotheta, precision): #;calcul de la colatitude de tous les points du cône
-
-    colat = np.zeros((int(precision)))
-
+    #colat = np.zeros((int(precision)))
     alpha = np.arange(int(precision))*2.*np.pi/precision
 
     ct = np.cos(theta)
@@ -313,15 +334,11 @@ def colatconer(r, xa, ya, za, theta, phi, cotheta, precision): #;calcul de la co
     Az = coordconezr(r, xa, ya, za, ct, st, cp, sp, cotheta, alpha)
 
     colatitude = calculcolattab(Ax, Ay, Az)
-
     colat = colatitude*180./np.pi
-
     return colat
 
 def longitconer(r, xa, ya, za, theta, phi, cotheta, precision): #;calcul de la longitude de tous les points du cône
-
-    longit = np.zeros((int(precision)))
-
+    #longit = np.zeros((int(precision)))
     alpha = np.arange(int(precision))*2.*np.pi/precision
 
     ct = np.cos(theta)
@@ -334,10 +351,25 @@ def longitconer(r, xa, ya, za, theta, phi, cotheta, precision): #;calcul de la l
     Az = coordconezr(r, xa, ya, za, ct, st, cp, sp, cotheta, alpha)
 
     longitude = calcullongittab(Ax, Ay, Az)
+    longit = longitude*180./np.pi
+    return longit
+def coner(r, xa, ya, za, theta, phi, cotheta, precision): #;calcul de la longitude de tous les points du cône
+    alpha = np.arange(int(precision))*2.*np.pi/precision
 
+    ct = np.cos(theta)
+    st = np.sin(theta)
+    cp = np.cos(phi)
+    sp = np.sin(phi)
+
+    Ax,Ay,Az = coordconer(r,xa,ya,za,ct,st,cp,sp,cotheta,alpha)
+
+    longitude = calcullongittab(Ax, Ay, Az)
     longit = longitude*180./np.pi
 
-    return longit
+    colatitude = calculcolattab(Ax, Ay, Az)
+    colat = colatitude*180./np.pi
+    return colat, longit
+
 
 
 def get_test_data_path():

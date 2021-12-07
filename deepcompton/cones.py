@@ -72,6 +72,11 @@ def make_cone_density(theta_source, phi_source, z_isgri, z_picsit, precision=500
     # cone counter
     ncones = 0
 
+    # position des capteurs
+    x1cur = z_isgri
+    x2cur = z_picsit
+
+
     # for each row in the data create a cone
     if progress:
         progress_msg = "Loading cones, theta:{}, phi:{}".format(theta_source, phi_source)
@@ -82,16 +87,15 @@ def make_cone_density(theta_source, phi_source, z_isgri, z_picsit, precision=500
             cone = make_cone(X[i, :], z_isgri, z_picsit)
             if cone is not None:
                 [theta, phi, cotheta] = cone
-                x1cur = z_isgri
-                x2cur = z_picsit
-
                 y1cur = X[i, 7]
                 z1cur = -X[i, 6]
                 y2cur = X[i, 9]
                 z2cur = -X[i, 8]
 
-                colat = compton.colatconer(r, x1cur, y1cur, z1cur, theta, phi, cotheta, precision)
-                longit = compton.longitconer(r, x1cur, y1cur, z1cur, theta, phi, cotheta, precision)
+                #colat = compton.colatconer(r, x1cur, y1cur, z1cur, theta, phi, cotheta, precision)
+                #longit = compton.longitconer(r, x1cur, y1cur, z1cur, theta, phi, cotheta, precision)
+
+                colat, longit = compton.coner(r, x1cur, y1cur, z1cur, theta, phi, cotheta, precision)
 
                 hemisphere = (colat < 90)
                 longit = longit[hemisphere]
