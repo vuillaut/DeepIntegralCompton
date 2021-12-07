@@ -23,7 +23,9 @@ setup(
     install_requires=[
         'numpy',
         'matplotlib',
-        'pandas'
+        'pandas',
+        'sklearn',
+        'tensorflow'
     ],
     packages=find_packages(),
     scripts=[],
