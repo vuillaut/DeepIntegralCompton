@@ -28,7 +28,8 @@ setup(
         'pandas',
         'sklearn',
         'tensorflow',
-        'astropy'
+        'astropy',
+        'tqdm'
     ],
     packages=find_packages(),
     scripts=[],
