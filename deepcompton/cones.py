@@ -40,8 +40,12 @@ def make_cone(x, z_isgri=constants.x_isgri, z_picsit=constants.x_picsit, Ee=cons
 
 
 def make_cone_density(theta_source, phi_source, z_isgri, z_picsit, precision=5000., density_precision=2., r=1e14,
-                      max_cones=2000000, lon_max=360., lat_max=90., progress=True):
-    name = "./save_Compton/theta_" + str(theta_source) + "_phi_" + str(phi_source) + ".npy"
+                      max_cones=2000000, lon_max=360., lat_max=90., progress=True, datadir=None):
+    if datadir is None:
+        name = "./save_Compton/theta_" + str(theta_source) + "_phi_" + str(phi_source) + ".npy"
+    else:
+        name = "{}/theta_".format(datadir) + str(theta_source) + "_phi_" + str(phi_source) + ".npy"
+
     X = np.load(name).astype(np.float64)
     N = X.shape[0]
     # if empty data return None
