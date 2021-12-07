@@ -1,8 +1,13 @@
 import numpy as np
+import os
+from astropy.table import Table
+from tqdm import tqdm
+import pickle
 
-import deepcompton.utils as compton
-from deepcompton.progress import printProgressBar
-from deepcompton import constants
+from .utils import load_data
+from .import utils as compton
+from .progress import printProgressBar
+from . import constants
 
 
 def make_cone(x, z_isgri=constants.x_isgri, z_picsit=constants.x_picsit, Ee=constants.electron_mass):
@@ -104,3 +109,53 @@ def make_cone_density(theta_source, phi_source, z_isgri, z_picsit, precision=500
         if progress:
             printProgressBar(i + 1, N, prefix=progress_msg, suffix='Complete', length=50)
     return density
+
+
+class AnglesDataset:
+
+    def __init__(self):
+        pass
+
+    def generate(self, src_dir):
+        """
+        generate dataset from source directory
+
+        :param src_dir: path
+        :return: `astropy.table`
+        """
+        filenames = [os.path.join(src_dir, f) for f in os.listdir(src_dir)]
+        src_thetas = []
+        src_phis = []
+        thetas = []
+        phis = []
+        cothetas = []
+        for filename in tqdm(filenames):
+            try:
+                data, src_theta, src_phi = load_data(filename)
+            except:
+                print(f"no data for {filename}")
+                continue
+            try:
+                theta, phi, cotheta = np.apply_along_axis(make_cone, axis=1, arr=data).T
+                src_thetas.append(src_theta)
+                src_phis.append(src_phi)
+                thetas.append(theta)
+                phis.append(phi)
+                cothetas.append(cotheta)
+            except:
+                print(f"fail for {filename}")
+
+        self.tab = Table(data=[src_thetas, src_phis, thetas, phis, cothetas],
+                         names=['src_theta', 'src_phi', 'theta', 'phi', 'cotheta'],
+                         )
+        return self.tab
+
+
+    def save(self, filename):
+        with open(filename, 'wb') as file:
+            pickle.dump(self.tab, file)
+
+    def load(self, filename):
+        with open(filename, 'rb') as file:
+            self.tab = pickle.load(file)
+        return self.tab
