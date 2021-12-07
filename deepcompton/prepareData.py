@@ -1,7 +1,7 @@
 from deepcompton.cones import AnglesDataset
 import numpy as np
 from sklearn.model_selection import train_test_split
-
+from sklearn.utils import shuffle
 
 def defineAllSample(dataTab, nbOfSample=20, nbOfPhotonsMax=1000, nbOfPhotonsMin=100 ):
     """
@@ -18,25 +18,37 @@ def defineAllSample(dataTab, nbOfSample=20, nbOfPhotonsMax=1000, nbOfPhotonsMin=
 
     trainAngles=[]
     testAngles=[]
-    
-    rowNumber = len(dataTab)
-    for i in range(rowNumber):
-      if i%100 ==0 :
-        print(i)
 
-      currentLine = dataTab[i]
+    for i, currentLine in enumerate(dataTab):
+        mask = np.isfinite(currentLine['theta']) & np.isfinite(currentLine['phi']) & np.isfinite(currentLine['cotheta'])
+        currentLine['theta'] = currentLine['theta'][mask]
+        currentLine['phi'] = currentLine['phi'][mask]
+        currentLine['cotheta'] = currentLine['cotheta'][mask]
 
-      src_theta = currentLine[0]
-      src_phi = currentLine[1]
-      srcTheta.append(src_theta)
-      srcPhi.append(src_phi)
+        if i % 100 == 0:
+            print(i)
 
-      trainAngle , testAngle = createSample(currentLine, nbOfSample, nbOfPhotonsMin, nbOfPhotonsMax)
+        src_theta = currentLine[0]
+        src_phi = currentLine[1]
+        srcTheta.append(src_theta)
+        srcPhi.append(src_phi)
 
-      trainAngles.append(trainAngle)
-      testAngles.append(testAngle)
+        trainAngle, testAngle = createSample(currentLine, nbOfSample, nbOfPhotonsMin, nbOfPhotonsMax)
 
-    return np.array(srcPhi), np.array(srcTheta), np.array(trainAngles), np.array(testAngles)
+        trainAngles.append(trainAngle)
+        testAngles.append(testAngle)
+
+    trainAngles = np.array(trainAngles)
+    trainAngles = trainAngles.reshape(trainAngles.shape[0] * trainAngles.shape[1], trainAngles.shape[3],
+                                      trainAngles.shape[2])
+    testAngles = np.array(testAngles)
+    testAngles = testAngles.reshape(testAngles.shape[0] * testAngles.shape[1], testAngles.shape[3],
+                                    testAngles.shape[2])
+
+    srcTheta = np.deg2rad(np.repeat(srcTheta, nbOfSample))
+    srcPhi = np.deg2rad(np.repeat(srcPhi, nbOfSample))
+
+    return shuffle(srcPhi, srcTheta, trainAngles, testAngles)
 
   
   

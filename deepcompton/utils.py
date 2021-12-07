@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 import pkg_resources
+from astropy import coordinates
+
 from . import constants
 
 
@@ -390,6 +392,7 @@ def angular_separation(colat1, long1, colat2, long2):
     -------
     1d `numpy.ndarray`, angular separation
     """
+    # ang_sep = coordinates.angular_separation(long1, np.pi/2.-colat1, long2, np.pi/2 - colat2)
 
     cosdelta = np.sin(colat1) * np.sin(colat2) * np.cos(
         (long1 - long2)) + np.cos(colat1) * np.cos(colat2)
