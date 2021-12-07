@@ -16,7 +16,10 @@ def load_data(filename):
     """
     array = np.load(filename)
     header = ['e1', 'e2', 'yy1', 'zz1', 'yy2', 'zz2', 'y1', 'z1', 'y2', 'z2']
-    df = pd.DataFrame(array, columns=header, dtype=np.float32)
+    if array:
+        df = pd.DataFrame(array, columns=header, dtype=np.float32)
+    else:
+        df = pd.DataFrame(columns=header)
     tp = Path(filename).with_suffix('').name.split('_')
     theta = int(tp[1])
     phi = int(tp[3])
@@ -341,7 +344,7 @@ def get_test_data_path():
     return pkg_resources.resource_filename(__name__, 'data/theta_42_phi_104.npy')
 
 
-def angular_separation(lat1, long1, lat2, long2):
+def angular_separation(colat1, long1, colat2, long2):
     """
     Compute the angular separation in radians
     between two pointing direction given with lat-long
@@ -353,11 +356,11 @@ def angular_separation(lat1, long1, lat2, long2):
     long2: 1d `numpy.ndarray`, longitude of the second pointing direction
     Returns
     -------
-    1d `numpy.ndarray` or float, angular separation
+    1d `numpy.ndarray`, angular separation
     """
 
-    cosdelta = np.cos(lat1) * np.cos(lat2) * np.cos(
-        (long1 - long2)) + np.sin(lat1) * np.sin(lat2)
+    cosdelta = np.sin(colat1) * np.sin(colat2) * np.cos(
+        (long1 - long2)) + np.cos(colat1) * np.cos(colat2)
 
     cosdelta[cosdelta > 1] = 1.
     cosdelta[cosdelta < -1] = -1.
