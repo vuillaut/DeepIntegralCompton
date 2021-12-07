@@ -3,15 +3,15 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 
 
-def defineAllSample(dataTab):
-    #nb of sample per line, i.e. for each simulated angle
-    nbOfSample=20
-    
-    #maximum number of photons in each sample
-    nbOfPhotonsMax=1000
-    
-    #minimum number of photons in each sample
-    nbOfPhotonsMin=100
+def defineAllSample(dataTab, nbOfSample=20, nbOfPhotonsMax=1000, nbOfPhotonsMin=100 ):
+    """
+
+    :param dataTab:
+    :param nbOfSample: nb of sample per line, i.e. for each simulated angle
+    :param nbOfPhotonsMax: maximum number of photons in each sample
+    :param nbOfPhotonsMin: minimum number of photons in each sample
+    :return: src_phi, src_theta, train_angles, test_angles
+    """
 
     srcTheta = []
     srcPhi = []
