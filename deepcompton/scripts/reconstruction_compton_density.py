@@ -72,7 +72,7 @@ def main(theta_source=42, phi_source=104):
             if (energ2cur >= Ec) and (energ1cur <= E0 - Ec):
 
                 E2 = E0 - energ1cur
-                cotheta = compton.cottheta(energ1cur,E0 - energ1cur)
+                cotheta = compton.cottheta(energ1cur, E0 - energ1cur)
                 A = np.array([x1cur,y1cur,z1cur])
                 B = np.array([x2cur,y2cur,z2cur])
 
@@ -119,7 +119,7 @@ def main(theta_source=42, phi_source=104):
 
     r_g, theta_g = np.meshgrid(expected, actual)
 
-    ax = viz.plot_backprojeted(theta_g, r_g, densite)
+    ax = viz.plot_backprojected(theta_g, r_g, densite)
     ax = viz.plot_source_pos(theta_source, np.radians(phi_source), ax=ax)
 
     plt.tight_layout()

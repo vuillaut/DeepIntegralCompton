@@ -16,7 +16,7 @@ def load_data(filename):
     """
     array = np.load(filename)
     header = ['e1', 'e2', 'yy1', 'zz1', 'yy2', 'zz2', 'y1', 'z1', 'y2', 'z2']
-    if array:
+    if len(array) > 0:
         df = pd.DataFrame(array, columns=header, dtype=np.float32)
     else:
         df = pd.DataFrame(columns=header)
