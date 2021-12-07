@@ -6,7 +6,16 @@ from deepcompton import constants
 
 
 def make_cone(x, z_isgri=constants.x_isgri, z_picsit=constants.x_picsit, Ee=constants.electron_mass):
-    """Single cone
+    """
+    Single cone reconstruction
+
+    :param x: `numpy.ndarray`
+        (x, y, z)
+    :param z_isgri: float
+    :param z_picsit: float
+    :param Ee: float
+    :return:
+        theta, phi, cotheta
     """
     x1cur = z_isgri
     x2cur = z_picsit
@@ -26,7 +35,7 @@ def make_cone(x, z_isgri=constants.x_isgri, z_picsit=constants.x_picsit, Ee=cons
 
     # why this condition ??
     if (energ2cur >= Ec) and (energ1cur <= E0 - Ec):
-        cotheta = compton.cottheta(energ1cur, energ2cur)
+        cotheta = compton.cottheta(energ1cur, E0 - energ1cur)
 
         A = np.array([x1cur, y1cur, z1cur])
         B = np.array([x2cur, y2cur, z2cur])
