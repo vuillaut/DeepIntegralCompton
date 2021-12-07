@@ -357,7 +357,7 @@ def angular_separation(colat1, long1, colat2, long2):
     """
 
     cosdelta = np.sin(colat1) * np.sin(colat2) * np.cos(
-        (long1 - long2)) + np.sin(colat1) * np.sin(colat2)
+        (long1 - long2)) + np.cos(colat1) * np.cos(colat2)
 
     cosdelta[cosdelta > 1] = 1.
     cosdelta[cosdelta < -1] = -1.
