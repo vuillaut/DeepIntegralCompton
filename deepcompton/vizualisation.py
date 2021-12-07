@@ -66,7 +66,7 @@ def plot_backprojected(theta_g, r_g, density, figsize=(12, 9)):
     return ax
 
 
-def plot_source_pos(theta_source, phi_source, ax=None):
+def plot_source_pos(theta_source, phi_source, ax=None, figsize=(10,6), **kwargs):
     """
     plot source position in polar
 
@@ -75,8 +75,12 @@ def plot_source_pos(theta_source, phi_source, ax=None):
     :param ax:
     :return:
     """
-    ax = plt.gca() if ax is None else ax
-    ax.scatter(phi_source, theta_source, label="Source position")
+    if ax is None:
+        fig, ax = plt.subplots(figsize=figsize, subplot_kw=dict(projection='polar'))
+    kwargs.setdefault('label', 'Source position')
+    im = ax.scatter(phi_source, theta_source, **kwargs)
+    if 'color' in kwargs:
+        fig.colorbar(im)
     ax.legend()
     return ax
 
