@@ -26,8 +26,7 @@ def make_cone(x, z_isgri=constants.x_isgri, z_picsit=constants.x_picsit, Ee=cons
 
     # why this condition ??
     if (energ2cur >= Ec) and (energ1cur <= E0 - Ec):
-        E2 = E0 - energ1cur
-        cotheta = compton.cottheta(energ1cur, E0 - energ1cur)
+        cotheta = compton.cottheta(energ1cur, energ2cur)
 
         A = np.array([x1cur, y1cur, z1cur])
         B = np.array([x2cur, y2cur, z2cur])
@@ -36,7 +35,8 @@ def make_cone(x, z_isgri=constants.x_isgri, z_picsit=constants.x_picsit, Ee=cons
         phi = compton.longitudeaxe(B, A)
 
         return np.array([theta, phi, cotheta])
-    return None
+    else:
+        return None
 
 
 def make_cone_density(theta_source, phi_source, z_isgri, z_picsit, precision=5000., density_precision=2., r=1e14,
