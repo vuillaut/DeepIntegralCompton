@@ -16,7 +16,10 @@ def load_data(filename):
     """
     array = np.load(filename)
     header = ['e1', 'e2', 'yy1', 'zz1', 'yy2', 'zz2', 'y1', 'z1', 'y2', 'z2']
-    df = pd.DataFrame(array, columns=header, dtype=np.float32)
+    if array:
+        df = pd.DataFrame(array, columns=header, dtype=np.float32)
+    else:
+        df = pd.DataFrame(columns=header)
     tp = Path(filename).with_suffix('').name.split('_')
     theta = int(tp[1])
     phi = int(tp[3])
