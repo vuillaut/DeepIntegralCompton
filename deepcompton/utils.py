@@ -353,7 +353,7 @@ def angular_separation(colat1, long1, colat2, long2):
     long2: 1d `numpy.ndarray`, longitude of the second pointing direction
     Returns
     -------
-    1d `numpy.ndarray` or float, angular separation
+    1d `numpy.ndarray`, angular separation
     """
 
     cosdelta = np.sin(colat1) * np.sin(colat2) * np.cos(
