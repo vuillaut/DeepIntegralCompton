@@ -16,7 +16,7 @@ def load_data(filename):
     """
     array = np.load(filename)
     header = ['e1', 'e2', 'yy1', 'zz1', 'yy2', 'zz2', 'y1', 'z1', 'y2', 'z2']
-    df = pd.DataFrame(array, columns=header)
+    df = pd.DataFrame(array, columns=header, dtype=np.float32)
     tp = Path(filename).with_suffix('').name.split('_')
     theta = int(tp[1])
     phi = int(tp[3])
@@ -36,7 +36,7 @@ def energy_compton(energy_0):
 
 def cottheta(E1, E2): #calcul de la cotangente de l'angle Compton
 
-    Me = 511. #masse electron (keV)
+    Me = constants.electron_mass  ## keV
 
     costheta = 1. - Me*E1/(E2*(E1+E2))
 
