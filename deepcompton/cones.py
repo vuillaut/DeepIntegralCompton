@@ -112,6 +112,8 @@ def make_cone_density(theta_source, phi_source, z_isgri, z_picsit, precision=500
 
 
 class AnglesDataset:
+    """:arg
+    """
 
     def __init__(self):
         pass
