@@ -339,3 +339,28 @@ def longitconer(r, xa, ya, za, theta, phi, cotheta, precision): #;calcul de la l
 
 def get_test_data_path():
     return pkg_resources.resource_filename(__name__, 'data/theta_42_phi_104.npy')
+
+
+def angular_separation(lat1, long1, lat2, long2):
+    """
+    Compute the angular separation in radians
+    between two pointing direction given with lat-long
+    Parameters
+    ----------
+    lat1: 1d `numpy.ndarray` , latitude of the first pointing direction
+    long1: 1d `numpy.ndarray` longitude of the first pointing direction
+    lat2: 1d `numpy.ndarray`, latitude of the second pointing direction
+    long2: 1d `numpy.ndarray`, longitude of the second pointing direction
+    Returns
+    -------
+    1d `numpy.ndarray` or float, angular separation
+    """
+
+    cosdelta = np.cos(lat1) * np.cos(lat2) * np.cos(
+        (long1 - long2)) + np.sin(lat1) * np.sin(lat2)
+
+    cosdelta[cosdelta > 1] = 1.
+    cosdelta[cosdelta < -1] = -1.
+
+    ang_sep = np.arccos(cosdelta)
+    return ang_sep
