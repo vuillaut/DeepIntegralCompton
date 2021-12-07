@@ -39,7 +39,7 @@ def scatter_plans(data, **kwargs):
     return axes
 
 
-def plot_backprojeted(theta_g, r_g, density, figsize=(12, 9)):
+def plot_backprojected(theta_g, r_g, density, figsize=(12, 9)):
     """
     plot backprojected map in polar
 
