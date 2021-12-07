@@ -6,6 +6,7 @@ from deepcompton import constants
 from deepcompton.utils import get_test_data_path, load_data
 
 
+
 def make_cone(x, z_isgri=constants.x_isgri, z_picsit=constants.x_picsit, Ee=constants.electron_mass):
     """Single cone
     """
@@ -39,6 +40,7 @@ def make_cone(x, z_isgri=constants.x_isgri, z_picsit=constants.x_picsit, Ee=cons
     return None
 
 
+
 def make_cone_density(filename=get_test_data_path(), z_isgri=constants.x_isgri, z_picsit=constants.x_picsit,
                       precision=constants.precision, density_precision=constants.density_precision,
                       r=constants.r_infinite, max_cones=2000000, lon_max=360., lat_max=90., progress=True):
@@ -46,6 +48,7 @@ def make_cone_density(filename=get_test_data_path(), z_isgri=constants.x_isgri, 
     data, theta_source, phi_source = load_data(filename)
 
     N = len(data)
+
     # if empty data return None
     if N == 0:
         return None
@@ -60,6 +63,7 @@ def make_cone_density(filename=get_test_data_path(), z_isgri=constants.x_isgri, 
     if progress:
         progress_msg = "Loading cones, theta:{}, phi:{}".format(theta_source, phi_source)
         printProgressBar(0, N, prefix=progress_msg, suffix='Complete', length=50)
+
     for i, row in data.iterrows():
         # while cone count is not reached
         if ncones < max_cones:
