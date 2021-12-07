@@ -27,7 +27,8 @@ setup(
         'matplotlib',
         'pandas',
         'sklearn',
-        'tensorflow'
+        'tensorflow',
+        'astropy'
     ],
     packages=find_packages(),
     scripts=[],
