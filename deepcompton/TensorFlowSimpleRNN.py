@@ -21,4 +21,4 @@ def runModelAndReturnPrediction(targetPhi,targetTheta,anglesTrain,anglesTest, ep
   model.fit(X_train, Y_train, epochs=epochs, batch_size=sizeofBatch)
   Y_pred_train = model.predict(X_train)
   Y_pred_test = model.predict(anglesTest)
-  return Y_pred_train, Y_pred_test
+  return Y_pred_train, Y_pred_test, model
