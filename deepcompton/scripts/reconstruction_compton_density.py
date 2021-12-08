@@ -17,7 +17,7 @@ def main(theta_source=42, phi_source=104):
 
 
     name = pkg_resources.resource_filename('deepcompton', f'data/theta_{theta_source}_phi_{phi_source}.npy')
-
+    name = "save_Compton/theta_{}_phi_{}.npy".format(theta_source, phi_source)
     if not os.path.exists(name):
         print("File {} not found. Exiting".format(name))
         exit()
@@ -103,8 +103,8 @@ def main(theta_source=42, phi_source=104):
 
 
 
-            if(i%100==0):
-                print(i)
+            #if(i%100==0):
+            #    print(i)
 
 
     np.savetxt(f'reco_theta_{theta_source}_phi_{phi_source}.txt',
@@ -118,12 +118,17 @@ def main(theta_source=42, phi_source=104):
     expected = np.arange(0, 90, 2)
 
     r_g, theta_g = np.meshgrid(expected, actual)
+    print("sum : ", np.sum(densite))
+
+    from deepcompton.cones import make_cone_density
+    density = make_cone_density(theta_source, phi_source, z_isgri, z_picsit)
+    print("msum : ", np.sum(density))
 
     ax = viz.plot_backprojected(theta_g, r_g, densite)
     ax = viz.plot_source_pos(theta_source, np.radians(phi_source), ax=ax)
 
     plt.tight_layout()
-    # plt.show()
+    plt.show()
 
 
 if __name__ == '__main__':
