@@ -3,13 +3,14 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 
-def defineAllSample(dataTab, nbOfSample=20, nbOfPhotonsMax=1000, nbOfPhotonsMin=100 ):
+def defineAllSample(dataTab, nbOfSample=20, nbOfPhotonsMax=1000, nbOfPhotonsMin=100, maskValue=-0.99):
     """
 
     :param dataTab:
     :param nbOfSample: nb of sample per line, i.e. for each simulated angle
     :param nbOfPhotonsMax: maximum number of photons in each sample
     :param nbOfPhotonsMin: minimum number of photons in each sample
+    :param maskValue: the value to use for masking missing data
     :return: src_phi, src_theta, train_angles, test_angles
     """
 
@@ -33,7 +34,7 @@ def defineAllSample(dataTab, nbOfSample=20, nbOfPhotonsMax=1000, nbOfPhotonsMin=
         srcTheta.append(src_theta)
         srcPhi.append(src_phi)
 
-        trainAngle, testAngle = createSample(currentLine, nbOfSample, nbOfPhotonsMin, nbOfPhotonsMax)
+        trainAngle, testAngle = createSample(currentLine, nbOfSample, nbOfPhotonsMin, nbOfPhotonsMax, maskValue)
 
         trainAngles.append(trainAngle)
         testAngles.append(testAngle)
@@ -52,7 +53,7 @@ def defineAllSample(dataTab, nbOfSample=20, nbOfPhotonsMax=1000, nbOfPhotonsMin=
 
   
   
-def createSample(line,nbOfSample, nbOfPhotonsMin, nbOfPhotonsMax):
+def createSample(line,nbOfSample, nbOfPhotonsMin, nbOfPhotonsMax, maskValue):
 
   trainTheta, testTheta, trainPhi, testPhi, trainCotheta, testCotheta = train_test_split(line['theta'],line['phi'],line['cotheta'], test_size=0.3)
   
@@ -61,8 +62,8 @@ def createSample(line,nbOfSample, nbOfPhotonsMin, nbOfPhotonsMax):
 
   for i in range(nbOfSample):
 
-    sampledPhiTrain, sampledCothetaTrain, sampledThetaTrain = performUnitSample(nbOfPhotonsMin, nbOfPhotonsMax, trainTheta, trainCotheta, trainPhi)
-    sampledPhiTest, sampledCothetaTest, sampledThetaTest = performUnitSample(nbOfPhotonsMin, nbOfPhotonsMax, testTheta, testCotheta, testPhi)
+    sampledPhiTrain, sampledCothetaTrain, sampledThetaTrain = performUnitSample(nbOfPhotonsMin, nbOfPhotonsMax, trainTheta, trainCotheta, trainPhi, maskValue)
+    sampledPhiTest, sampledCothetaTest, sampledThetaTest = performUnitSample(nbOfPhotonsMin, nbOfPhotonsMax, testTheta, testCotheta, testPhi, maskValue)
 
     resultTrain = np.array([ sampledPhiTrain, sampledCothetaTrain, sampledThetaTrain])
     resultTest = np.array([sampledPhiTest, sampledCothetaTest, sampledThetaTest])
@@ -74,13 +75,13 @@ def createSample(line,nbOfSample, nbOfPhotonsMin, nbOfPhotonsMax):
 
 
 
-def performUnitSample(nbOfPhotonsMin, nbOfPhotonsMax, thetaVector, cothetaVector, phiVector):
+def performUnitSample(nbOfPhotonsMin, nbOfPhotonsMax, thetaVector, cothetaVector, phiVector, maskValue):
   nbOfPhotons = np.random.randint(nbOfPhotonsMin,nbOfPhotonsMax)
   indexesAleatoires = np.random.randint(thetaVector.size, size = nbOfPhotons)
 
-  sampledPhi = -0.99*np.ones(nbOfPhotonsMax)
-  sampledCotheta = -0.99*np.ones(nbOfPhotonsMax)
-  sampledTheta = -0.99*np.ones(nbOfPhotonsMax)
+  sampledPhi = maskValue*np.ones(nbOfPhotonsMax)
+  sampledCotheta = maskValue*np.ones(nbOfPhotonsMax)
+  sampledTheta = maskValue*np.ones(nbOfPhotonsMax)
   
   sampledPhi[0:nbOfPhotons]=phiVector[indexesAleatoires]
   sampledCotheta[0:nbOfPhotons]= cothetaVector[indexesAleatoires]
