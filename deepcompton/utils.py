@@ -360,13 +360,13 @@ def angular_separation(colat1, long1, colat2, long2):
     -------
     1d `numpy.ndarray`, angular separation
     """
-    # ang_sep = coordinates.angular_separation(long1, np.pi/2.-colat1, long2, np.pi/2 - colat2)
+    ang_sep = coordinates.angular_separation(long1, np.pi/2.-colat1, long2, np.pi/2 - colat2)
 
-    cosdelta = np.sin(colat1) * np.sin(colat2) * np.cos(
-        (long1 - long2)) + np.cos(colat1) * np.cos(colat2)
-
-    cosdelta[cosdelta > 1] = 1.
-    cosdelta[cosdelta < -1] = -1.
-
-    ang_sep = np.arccos(cosdelta)
+    # cosdelta = np.sin(colat1) * np.sin(colat2) * np.cos(
+    #     (long1 - long2)) + np.cos(colat1) * np.cos(colat2)
+    #
+    # cosdelta[cosdelta > 1] = 1.
+    # cosdelta[cosdelta < -1] = -1.
+    #
+    # ang_sep = np.arccos(cosdelta)
     return ang_sep
