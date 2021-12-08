@@ -5,6 +5,7 @@ import numpy as np
 def defineNetword():
   model = keras.models.Sequential([
     keras.layers.SimpleRNN(20, return_sequences=True, input_shape=[None, 3]),
+    keras.layers.Masking(mask_value=-0.99),
     keras.layers.BatchNormalization(),
     keras.layers.SimpleRNN(20, return_sequences=False),
     keras.layers.BatchNormalization(),
