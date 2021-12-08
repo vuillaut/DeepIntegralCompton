@@ -14,7 +14,7 @@ def defineNetwork():
   return model
 
 def runModelAndReturnPrediction(targetPhi,targetTheta,anglesTrain,anglesTest, epochs=20, sizeofBatch=120):
-  Y_train = np.array([targetPhi,targetTheta]).reshape(targetPhi.shape[0],-1)
+  Y_train = np.transpose([targetPhi,targetTheta])
   X_train = anglesTrain
   model = defineNetwork()
   model.compile(loss="mse", optimizer="adam", metrics=["mse"])
