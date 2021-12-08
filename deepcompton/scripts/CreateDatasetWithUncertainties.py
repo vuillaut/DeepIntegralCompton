@@ -164,10 +164,10 @@ def Create_dataset(name_file_list,path, name_pkl, n_file_max = -1, n_image_file 
         i+=1
         _,theta,_,phi=name_file.replace(".npy","").split("_")
         j=0
-        for n_cones in np.random.randint(n_cones_min,n_cones_max,size = n_image_file) :
+        for n_cones in np.random.randint(n_cones_min,n_cones_max+1,size = n_image_file) :
             data = np.load(path+name_file).astype("float64")
             if len(data)>0:
-                print(f"\r file n°{i}/{n_file_max}, image n°{j}/{n_image_file} ", end='', flush=True)
+                #print(f"\r file n°{i}/{n_file_max}, image n°{j}/{n_image_file} ", end='', flush=True)
                 data =  Create_image(data, n_cones, sigma = sigma)
                 y.append([float(theta),float(phi),n_cones])
                 x.append(data)
@@ -193,8 +193,8 @@ def Create_dataset(name_file_list,path, name_pkl, n_file_max = -1, n_image_file 
 path = '/Users/lg265853/Documents/AstroInfo/save_Compton'
 name_file_list = listdir(path)
 
-n_file_max = 10
-n_image_file = 5
+n_file_max = -1
+n_image_file = 100
 n_cones_min = 100
 n_cones_max = 2000
 sigma = 2
