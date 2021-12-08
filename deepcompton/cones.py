@@ -9,6 +9,8 @@ from .import utils as compton
 from .progress import printProgressBar
 from . import constants
 
+from astropy.io.misc.hdf5 import write_table_hdf5
+
 
 def make_cone(x, z_isgri=constants.x_isgri, z_picsit=constants.x_picsit, Ee=constants.electron_mass):
     """
@@ -165,7 +167,6 @@ class AnglesDataset:
                          )
         return self.tab
 
-
     def save(self, filename):
         with open(filename, 'wb') as file:
             pickle.dump(self.tab, file)
@@ -174,3 +175,76 @@ class AnglesDataset:
         with open(filename, 'rb') as file:
             self.tab = pickle.load(file)
         return self.tab
+
+    def extend(self):
+        if 'tab' not in self.__dict__.keys():
+            raise AttributeError("You must load or generate the base table first")
+
+        lengths = np.array([len(t['theta']) for t in self.tab])
+        selected_rows = self.tab[lengths > 1000]
+        cols = ['theta', 'phi', 'cotheta']
+        redim_cols = {col: [] for col in selected_rows.colnames}
+        redim_cols['src_theta'] = selected_rows['src_theta']
+        redim_cols['src_phi'] = selected_rows['src_phi']
+        for row in selected_rows:
+            for col in cols:
+                redim_cols[col].append(np.concatenate([row[col], np.zeros(lengths.max() - len(row[col]))]))
+
+        for name, col in redim_cols.items():
+            redim_cols[name] = np.array(col)
+
+        self.tab_extended = Table(data=redim_cols)
+
+    def save_extended(self, filename='extended_angles.h5', **kwargs):
+        """
+        save in HDF5 format
+
+        :param filename:
+        :kwargs kwargs for `astropy.io.misc.hdf5.write_table_hdf5`
+        """
+        kwargs.setdefault('compression', True)
+        kwargs['path'] = 'angles'
+        write_table_hdf5(self.tab_extended, filename, **kwargs)
+
+    def load_extended(self, filename='extended_angles.h5'):
+        self.tab_extended = Table.read(filename, path='angles')
+
+    def golden(self, min_size=1000):
+        if 'tab' not in self.__dict__.keys():
+            raise AttributeError("You must load or generate the base table first")
+
+        ## compute lengths to throw the too short ones
+        lengths = np.array([len(t['theta']) for t in self.tab])
+        selected_rows = self.tab[lengths >= min_size]
+        ## recompute lengths to get the min
+        lengths = np.array([len(t['theta']) for t in selected_rows])
+
+        cols = ['theta', 'phi', 'cotheta']
+        redim_cols = {col: [] for col in selected_rows.colnames}
+        redim_cols['src_theta'] = selected_rows['src_theta']
+        redim_cols['src_phi'] = selected_rows['src_phi']
+        for row in selected_rows:
+            for col in cols:
+                redim_cols[col].append(row[col][:lengths.min()])
+
+        for name, col in redim_cols.items():
+            redim_cols[name] = np.array(col)
+
+        self.tab_gold = Table(data=redim_cols)
+
+    def save_golden(self, filename='gold_angles.hdf5', **kwargs):
+        """
+        save in HDF5 format
+
+        :param filename:
+        :kwargs kwargs for `astropy.io.misc.hdf5.write_table_hdf5`
+        """
+        kwargs.setdefault('compression', True)
+        kwargs['path'] = 'angles'
+        write_table_hdf5(self.tab_gold, filename, **kwargs)
+
+    def load_golden(self, filename='gold_angles.hdf5'):
+        self.tab_gold = Table.read(filename, path='angles')
+
+
+
