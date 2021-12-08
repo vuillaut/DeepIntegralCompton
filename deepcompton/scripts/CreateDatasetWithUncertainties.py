@@ -172,7 +172,17 @@ def Create_dataset(name_file_list,path, name_pkl, n_file_max = -1, n_image_file 
                 y.append([float(theta),float(phi),n_cones])
                 x.append(data)
                 j+=1
-    pkl.dump((x,y), open(name_pkl, "wb"))
+            if len(y)%100 == 0:
+                nx,ny = pkl.load(open(name_pkl, "rb"))
+                nx+=x
+                ny+=y
+                pkl.dump((nx,ny), open(name_pkl, "wb"))
+                x.clear()
+                y.clear()
+    nx,ny = pkl.load(open(name_pkl, "rb"))
+    nx+=x
+    ny+=y
+    pkl.dump((nx,ny), open(name_pkl, "wb"))
     return 0
 
 
