@@ -195,7 +195,7 @@ class AnglesDataset:
 
         self.tab_extended = Table(data=redim_cols)
 
-    def save_extended(self, filename='extended_angles.hdf5', **kwargs):
+    def save_extended(self, filename='extended_angles.h5', **kwargs):
         """
         save in HDF5 format
 
@@ -206,7 +206,7 @@ class AnglesDataset:
         kwargs['path'] = 'angles'
         write_table_hdf5(self.tab_extended, filename, **kwargs)
 
-    def load_extended(self, filename='extended_angles.hdf5'):
+    def load_extended(self, filename='extended_angles.h5'):
         self.tab_extended = Table.read(filename, path='angles')
 
     def golden(self, min_size=1000):
