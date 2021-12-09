@@ -44,7 +44,7 @@ for f in os.listdir(models_dir):
                     print(y_real , y_pred)
                     ang_sep.append(angular_separation(np.array([y_real[0]]), np.array([y_real[1]]), y_pred[0,0], y_pred[0,1])*180./np.pi)
                     total_sep+=ang_sep
-                model_separations[model_name].append([theta,phi], ang_sep)
+                model_separations[model_name].append(([theta,phi], ang_sep))
             mean_separations[m] = np.mean(total_sep)
 
 # separation as function of number of cones for each theta, phi
