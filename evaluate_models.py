@@ -27,6 +27,7 @@ for f in os.listdir(models_dir):
             model_filename = os.path.join(dirpath, filename)
             model = tf.keras.load_model(model_filename)
             total_sep = []
+            print("Model : {}".format(model_name))
             for (theta,phi) in real_data:
                 ang_sep = []
                 for ncones in real_data[theta,phi][0]:
