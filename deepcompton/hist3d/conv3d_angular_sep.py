@@ -199,7 +199,7 @@ if __name__ == '__main__':
 
     model.compile(loss=cos_angular_separation_tf, optimizer=opt, metrics=[angular_separation_tf])
 
-    n_epochs = 10000000000
+    n_epochs = 100
 
     batch_size = 128
 
