@@ -15,12 +15,19 @@ from keras import regularizers
 import tensorflow as tf
 import numpy as np
 import matplotlib .pyplot as plt
+from deepcompton.prepareData import createSample, performUnitSample
+
 
 dic = np.load("dic_theta_phi_delta.npy", allow_pickle=True)[0]
 
 from deepcompton.cones import AnglesDataset
-ad = AnglesDataset()
-ad.load('../../../Data/angles_dataset.pkl')
+angles_dataset = AnglesDataset()
+angles_dataset.load('../../../Data/angles_dataset.pkl')
+train_ad, test_ad = angles_dataset.split_tab_train_test()
+train_ad.save('train_dataset.pkl')
+test_ad.save('test_dataset.pkl')
+# for the rest we use train_ad
+ad = train_ad
 
 # keys = (list(dic.keys()))
 # size_keys = np.shape(keys)[0]
@@ -56,7 +63,11 @@ def create_data(batch_size):
         index_evnt_sel = np.random.randint(size_list_evnt, size=n_cones)
         list_evnt_sel = list_evnt[index_evnt_sel]
 
-
+        phi, cotheta, theta = performUnitSample(nmin_cones, nmax_cones,
+                                                row['theta'], row['cotheta'], row['phi'],
+                                                0)
+        # TODO: replace 0 with noise data
+        list_evnt_sel = np.transpose([theta, phi, cotheta])
 
         hist_3d, bx = np.histogramdd(list_evnt_sel, bins=[size_th, size_phi, size_delta],
                                      range=[(0, max_th), (0, max_phi), (0, max_delta)])

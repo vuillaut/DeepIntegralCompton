@@ -11,6 +11,8 @@ from . import constants
 
 from astropy.io.misc.hdf5 import write_table_hdf5
 
+from sklearn.model_selection import train_test_split
+
 
 def make_cone(x, z_isgri=constants.x_isgri, z_picsit=constants.x_picsit, Ee=constants.electron_mass):
     """
@@ -181,6 +183,40 @@ class AnglesDataset:
         with open(filename, 'rb') as file:
             self.tab = pickle.load(file)
         return self.tab
+
+    def split_tab_train_test(self, test_size=0.5, random_state=None, shuffle=True, stratify=None):
+        """
+        return two tables: train/test
+        :return:
+        """
+        train_tab = Table(names=self.tab.colnames)
+        test_tab = Table(names=self.tab.colnames)
+        for row in self.tab:
+            train_theta, test_theta, train_phi, test_phi, train_cotheta, test_cotheta = \
+                train_test_split(row['theta'], row['phi'], row['cotheta'],
+                                 test_size=test_size, random_state=random_state, shuffle=shuffle, stratify=stratify)
+            train_tab.add_row({'src_theta': row['src_theta'],
+                               'src_phi': row['src_phi'],
+                               'theta': train_theta,
+                               'phi': train_phi,
+                               'cotheta': train_cotheta
+                               })
+
+            train_tab.add_row({'src_theta': row['src_theta'],
+                               'src_phi': row['src_phi'],
+                               'theta': test_theta,
+                               'phi': test_phi,
+                               'cotheta': test_cotheta
+                               })
+
+        # self.train_tab = train_tab
+        # self.test_tab = test_tab
+        train_ad = AnglesDataset()
+        train_ad.tab = train_tab
+        test_ad = AnglesDataset()
+        test_ad.tab = test_tab
+        return train_ad, test_ad
+
 
     def extend(self):
         if 'tab' not in self.__dict__.keys():
