@@ -39,8 +39,9 @@ for f in os.listdir(models_dir):
                 realx,_,_ = pkl.load(open(real_filename,"rb"))
                 ang_sep = []
                 for i in range(len(realx)):
-                    y_pred = model(realx[i].reshape(1,180,45,1))
+                    y_pred = model(realx[i].reshape(1,180,45,1)).numpy()
                     y_real = np.radians(np.array([theta, phi]))
+                    print(y_real , y_pred)
                     ang_sep.append(angular_separation(np.array([y_real[0]]), np.array([y_real[1]]), np.array([y_pred[0]]), np.array([y_pred[1]]))*180./np.pi)
                     total_sep+=ang_sep
                 model_separations[model_name].append([theta,phi], ang_sep)
