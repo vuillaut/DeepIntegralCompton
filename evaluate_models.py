@@ -33,7 +33,7 @@ for f in os.listdir(models_dir):
             total_sep = []
             print("Model : {}".format(model_name))
             for real_filename in realdatadir:
-                [_,theta,_,phi] = real_filename.replace(".pkl","").split("_")
+                [_,_,theta,_,phi] = real_filename.replace(".pkl","").split("_")
                 theta=int(theta)
                 phi=int(phi)
                 realx,_,_ = pkl.load(open(real_filename,"rb"))
