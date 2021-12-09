@@ -191,8 +191,8 @@ if __name__ == '__main__':
     model.add(Dense(2, activation=None, kernel_initializer='he_normal'))
 
     print(model.summary())
-    # opt = optimizers.get('adam')(learning_rate=0.00001)
-    opt = optimizers.adam_v2.Adam(learning_rate=0.00001)
+    opt = optimizers.get('adam')(learning_rate=0.00001)
+    # opt = optimizers.adam_v2.Adam(learning_rate=0.00001)  ## old keras version
 
     model.compile(loss=cos_angular_separation_tf, optimizer=opt, metrics=[angular_separation_tf])
 
