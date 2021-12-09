@@ -8,7 +8,7 @@ import deepcompton.utils as compton
 from deepcompton import constants
 from deepcompton import vizualisation as viz
 
-def main(theta_source=42, phi_source=104):
+def main(theta_source=42, phi_source=104, datadir=pkg_resources.resource_filename('deepcompton', 'data')):
 
     plt.rcParams.update({"font.size": 14})
     Ee = constants.electron_mass
@@ -17,7 +17,7 @@ def main(theta_source=42, phi_source=104):
 
 
     name = pkg_resources.resource_filename('deepcompton', f'data/theta_{theta_source}_phi_{phi_source}.npy')
-    # name = "save_Compton/theta_{}_phi_{}.npy".format(theta_source, phi_source)
+
     if not os.path.exists(name):
         print("File {} not found. Exiting".format(name))
         exit()
@@ -121,7 +121,7 @@ def main(theta_source=42, phi_source=104):
     print("sum : ", np.sum(densite))
 
     from deepcompton.cones import make_cone_density
-    density = make_cone_density(theta_source, phi_source, z_isgri, z_picsit)
+    density = make_cone_density(theta_source, phi_source, z_isgri, z_picsit, datadir=datadir)
     print("msum : ", np.sum(density))
 
     ax = viz.plot_backprojected(theta_g, r_g, densite)
