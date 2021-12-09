@@ -14,3 +14,6 @@ dependencies:
   - tensorboard
   - pytorch-lightning
   - astropy
+  - keras
+  - tensorflow
+
