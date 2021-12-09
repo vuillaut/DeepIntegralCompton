@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import pickle as pkl
+print(os.getcwd())
 from deepcompton.cones import make_cone_density
 
 from threading import Lock
