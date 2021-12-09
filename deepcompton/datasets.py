@@ -103,11 +103,6 @@ class SingleSourceDensityDataset:
             return pkl.load(open(SingleSourceDensityDataset.target_filename))
         return pkl.load(open(SingleSourceDensityDataset.target_filename))
 
-        if __name__ == "__main__":
-        # start the data generation
-            dataset = SingleSourceDensityDataset(filename="hahah.pkl")
-        dataset.generate()
-
 
 
 
