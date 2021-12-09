@@ -84,8 +84,8 @@ class BaseModel1:
        
         # save the history
         pkl.dump(hist.history, open("./models/{}/hist.pkl".format(self.name), "wb"))
-        self.make_test_outputs(model, x_test, y_test)
-    def make_test_outputs(self, model, x_test, y_test):
+        self.make_test_outputs(model, x_test, y_test, hist)
+    def make_test_outputs(self, model, x_test, y_test, history):
         y_pred = model(x_test).numpy()
         angular_seps=angular_separation(y_test[:,0],y_test[:,1],y_pred[:,0],y_pred[:,1]) * 180. / np.pi
         angular_seps = np.array(angular_seps)
@@ -95,6 +95,25 @@ class BaseModel1:
         plt.title("Angular separation after training {}".format(self.name))
         plt.xlabel("Angular separation (deg)")
         plt.savefig("./models/{}/angular_separation_distribution.png".format(self.name))
+
+        plt.figure()
+        plt.plot(history.history["loss"], label="loss")
+        plt.plot(history.history["val_loss"], label="val_loss")
+        plt.title("Training loss")
+        plt.xlabel("Epochs")
+        plt.ylabel("Loss")
+        plt.savefig("./models/{}/loss.png".format(self.name))
+
+        plt.figure()
+        plt.plot(history.history["angle"], label="separation")
+        plt.plot(history.history["val_angle"], label="val_separation")
+        plt.title("Angular separation")
+        plt.xlabel("Epochs")
+        plt.ylabel("Angular separation (deg)")
+        plt.savefig("./models/{}/angular_separation.png".format(self.name))
+
+
+
         
 
 #from deepcompton.datasets.single_source_densities import SingleSourceDensityDataset
