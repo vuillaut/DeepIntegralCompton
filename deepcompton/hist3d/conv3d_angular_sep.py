@@ -15,14 +15,23 @@ from keras import regularizers
 import tensorflow as tf
 import numpy as np
 import matplotlib .pyplot as plt
+import os
 from deepcompton.prepareData import createSample, performUnitSample
-
-
-dic = np.load("dic_theta_phi_delta.npy", allow_pickle=True)[0]
-
 from deepcompton.cones import AnglesDataset
+
+
+filename = '../../../Data/angles_dataset.pkl'
+if not os.path.exists(filename):
+    filename = '/mustfs/MUST-DATA/glearn/workspaces/thomas/astroinfo21/Compton/Data/angles_dataset.pkl'
+
+# dic = np.load("dic_theta_phi_delta.npy", allow_pickle=True)[0]
+
+
+
 angles_dataset = AnglesDataset()
-angles_dataset.load('../../../Data/angles_dataset.pkl')
+
+angles_dataset.load(filename)
+
 train_ad, test_ad = angles_dataset.split_tab_train_test()
 train_ad.save('train_dataset.pkl')
 test_ad.save('test_dataset.pkl')

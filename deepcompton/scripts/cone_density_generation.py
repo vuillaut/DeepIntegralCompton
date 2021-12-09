@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import pickle as pkl
+print(os.getcwd())
 from deepcompton.cones import make_cone_density
 
 from threading import Lock
@@ -16,22 +17,37 @@ z_picsit = -8.68
 
 n = 100
 
-data_filename = "cone_density_data_full_rand.pkl"
+data_filename = "cone_density_data_full_rand_better.pkl"
 if not os.path.exists(data_filename):
     # get cone density data for all files in dataset
     from multiprocessing import Pool, Manager
     manager = Manager()
     data=manager.list()    
+    labels=manager.list()
     def get_data(f):
         for i in range(n):
             print("Loading from {} {}".format(f,i))
             if f.endswith(".npy"):
                 _,theta_source,_,phi_source=f.replace(".npy","").split("_")
-                data.append(([float(theta_source), float(phi_source)],make_cone_density(theta_source, phi_source,z_isgri, z_picsit, progress=False, n_events=[100,2000])))
+                a= make_cone_density(theta_source, phi_source,z_isgri, z_picsit, progress=False, n_events=[100,2000])
+                if a is not None:
+                    lock.acquire()
+                    data.append(a)
+                    labels.append([float(theta_source), float(phi_source)])
+                    lock.release()
             if len(data)%100==0:
                 print("Aquiring lock")
                 lock.acquire()
-                pkl.dump(list(data), open(data_filename, "wb"))
+                if os.path.exists(data_filename):
+                    x,y = pkl.load(open(data_filename, "wb"))
+                    new_x, new_y = np.array(list(data)), np.array(list(labels))
+                    x,y = np.concatenate((x, new_x), axis=0), np.concatenate((y, new_y), axis=0)
+                else:
+                    x, y = np.array(list(data)), np.array(list(labels))
+
+                pkl.dump((x,y), open(data_filename, "wb"))
+                data.clear()
+                labels.clear()
                 lock.release()
                 print("Realeased lock")
     
@@ -39,11 +55,14 @@ if not os.path.exists(data_filename):
     with Pool(3,maxtasksperchild=10) as p:
         for t in p.imap(get_data, os.listdir("save_Compton"), chunksize=365):
             pass
-    
-    
-    
-    pkl.dump(list(data), open(data_filename,"wb"))
+    x,y = pkl.load(open(data_filename, "wb"))
+    new_x, new_y = np.array(list(data)), np.array(list(labels))
+    x,y = np.concatenate((x, new_x), axis=0), np.concatenate((y, new_y), axis=0)
+
+    pkl.dump((x,y), open(data_filename,"wb"))
+
     print("Done generating data, save in {}. Exiting now.".format(data_filename))
+    exit()
     data=list(data)
     labels=[e[0] for e in data]
     data = [e[1] for e in data]
