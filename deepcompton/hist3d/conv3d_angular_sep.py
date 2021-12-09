@@ -20,7 +20,9 @@ dic = np.load("dic_theta_phi_delta.npy", allow_pickle=True)[0]
 
 from deepcompton.cones import AnglesDataset
 ad = AnglesDataset()
-ad.load('../../../Data/angles_dataset.pkl')
+
+filename = '/mustfs/MUST-DATA/glearn/workspaces/thomas/astroinfo21/Compton/Data/angles_dataset.pkl'
+ad.load('filename')
 
 # keys = (list(dic.keys()))
 # size_keys = np.shape(keys)[0]
