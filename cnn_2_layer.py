@@ -89,6 +89,7 @@ class BaseModel1:
         print("Mean angular separation : {}".format(np.mean(angular_seps)))
         plt.title("Angular separation after training {}".format(self.name))
         plt.xlabel("Angular separation (deg)")
+        plt.ylabel("Separation (deg)")
         plt.savefig("./models/{}/angular_separation_distribution.png".format(self.name))
 
         plt.figure()
