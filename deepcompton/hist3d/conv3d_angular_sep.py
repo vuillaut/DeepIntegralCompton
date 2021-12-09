@@ -40,6 +40,9 @@ ad = train_ad
 
 ### ADDING NOISE
 noise_filename = '../../../Data/real_noise.npy'
+if not os.path.exists(noise_filename):
+    filename = '/mustfs/MUST-DATA/glearn/workspaces/thomas/astroinfo21/Compton/Data/real_noise.npy'
+
 noise = np.load(noise_filename)
 ad.extend_with_noise(noise_array=noise, max_length=ad.lengths.max()*2)
 
