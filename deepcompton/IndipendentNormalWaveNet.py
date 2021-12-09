@@ -25,6 +25,4 @@ def runModelAndReturnPrediction(targetPhi,targetTheta,anglesTrain,anglesTest, ep
   negloglik = lambda x, distrib: -distrib.log_prob(x)
   model.compile(optimizer=tf.optimizers.Adam(learning_rate=1e-3),loss=negloglik)
   model.fit(X_train, Y_train, epochs=epochs, batch_size=sizeofBatch)
-  Y_pred_train_dist = model.predict(X_train)
-  Y_pred_test_dist = model.predict(anglesTest)
-  return Y_pred_train_dist, Y_pred_test_dist, model
+  return model
