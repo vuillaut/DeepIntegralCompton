@@ -29,7 +29,11 @@ for f in os.listdir(models_dir):
     for filename in os.listdir(dirpath):
         if filename.endswith(".hdf5"):
             model_filename = os.path.join(dirpath, filename)
-            model = tf.keras.models.load_model(model_filename, custom_objects={"angular_loss":angular_loss, "angle":angle})
+            try:
+                model = tf.keras.models.load_model(model_filename, custom_objects={"angular_loss":angular_loss, "angle":angle})
+            except: 
+                print("Failed to load {}".format(model_name))
+                continue
             total_sep = []
             print("Model : {}".format(model_name))
             for real_filename in realdatadir:
