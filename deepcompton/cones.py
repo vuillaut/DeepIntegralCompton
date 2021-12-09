@@ -189,8 +189,8 @@ class AnglesDataset:
         return two tables: train/test
         :return:
         """
-        train_tab = Table(names=self.tab.colnames)
-        test_tab = Table(names=self.tab.colnames)
+        train_tab = Table(names=self.tab.colnames, dtype=self.tab.dtype)
+        test_tab = Table(names=self.tab.colnames, dtype=self.tab.dtype)
         for row in self.tab:
             train_theta, test_theta, train_phi, test_phi, train_cotheta, test_cotheta = \
                 train_test_split(row['theta'], row['phi'], row['cotheta'],
