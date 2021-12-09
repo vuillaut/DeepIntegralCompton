@@ -232,7 +232,7 @@ class AnglesDataset:
         """
         if 'tab' not in self.__dict__.keys():
             raise AttributeError("You must load or generate the base table first")
-
+        self.extend_value = value
         lengths = self.lengths
         max_length = lengths.max() if max_length is None else max_length
         selected_rows = self.tab[lengths > 1000]
@@ -248,6 +248,29 @@ class AnglesDataset:
             redim_cols[name] = np.array(col)
 
         self.tab_extended = Table(data=redim_cols)
+
+    def extend_with_noise(self, noise_array, max_length=None):
+        """
+
+        :param noise_array: shape (N, 3)
+        :return:
+        """
+        if 'tab_extended' not in self.__dict__.keys():
+            extend_value = -424242
+            self.extend(value=extend_value, max_length=max_length)
+            assert self.extend_value == extend_value
+
+        filtered_noise = noise_array[np.isfinite(noise_array).all(axis=1)]  # filter noise with nan
+
+        for row in self.tab_extended:
+            data = np.array([row['theta'].data, row['phi'].data, row['cotheta'].data])
+            mask = (data == self.extend_value).all(axis=1)
+            len_mask = len(mask[mask])
+            rdm_indexes = np.random.randint(0, len_mask, size=len_mask)
+            data[mask] == filtered_noise[rdm_indexes]
+            row['theta'] = data[0]
+            row['phi'] = data[1]
+            row['cotheta'] = data[2]
 
     def save_extended(self, filename='extended_angles.h5', **kwargs):
         """
