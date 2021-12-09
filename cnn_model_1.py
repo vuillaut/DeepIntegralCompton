@@ -88,17 +88,10 @@ class BaseModel1:
 from deepcompton.datasets.single_source_densities import SingleSourceDensityDataset
 if __name__=="__main__":
     # load the data here
-    datapath = "cone_density_data_full_rand.pkl"
-    d= pkl.load(open(datapath, "rb"))
-    x=[]; y=[]
-    for i in range(len(d)):
-        if not d[i][1] is None:
-            x.append(d[i][1])
-            y.append(d[i][0])
-        if len(x)==20000:
-            break
+    datapath = "UncertaintiesDataset.pkl"
+    x,y= pkl.load(open(datapath, "rb"))
     x = np.array(x).reshape(len(x),180,45,1)
-    y = np.array(y)
+    y = np.radians(np.array(y))
 
     # standardize the data
     x = standardize(x)
