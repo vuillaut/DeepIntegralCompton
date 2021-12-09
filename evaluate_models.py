@@ -5,14 +5,14 @@ import pickle as pkl
 import matplotlib.pyplot as plt
 from deepcompton.utils import angular_separation
 
-realdatadir = "./real_data"
+realdatadir = ["SetImageReal_theta_38_phi_303.pkl", "SetImageReal_theta_65_phi_210.pkl"]
 models_dir = "./models"
 model_scores = {}
 model_separations = {}
 mean_separations = {}
 # real data images are stored in a pickle file
 real_data = pkl.load(open("real_data"))
-n_cones = np.linspace(100, 2000, 50)
+n_cones = np.arange(100, 2000, 50)
 def save_perfhist():
     pass
 
@@ -28,10 +28,14 @@ for f in os.listdir(models_dir):
             model = tf.keras.load_model(model_filename)
             total_sep = []
             print("Model : {}".format(model_name))
-            for (theta,phi) in real_data:
+            for real_filename in realdatadir:
+                [_,theta,_,phi] = real_filename.replace(".pkl","").split("_")
+                theta=int(theta)
+                phi=int(phi)
+                realx,_,_ = pkl.load(open(real_filename,"rb"))
                 ang_sep = []
-                for ncones in real_data[theta,phi][0]:
-                    y_pred = model(real_data[theta,phi][1])
+                for i in range(len(realx)):
+                    y_pred = model(realx[i].reshape(1,180,45,1))
                     y_real = np.radians(np.array([theta, phi]))
                     ang_sep.append(angular_separation(y_real[0], y_real[1], y_pred[0], y_pred[1])*180./np.pi)
                     total_sep+=ang_sep
