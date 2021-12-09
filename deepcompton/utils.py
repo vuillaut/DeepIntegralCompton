@@ -21,7 +21,7 @@ def load_data(filename):
     if len(array) > 0:
         df = pd.DataFrame(array, columns=header, dtype=np.float32)
     else:
-        df = pd.DataFrame(columns=header)
+        raise ValueError(f"Empty file {filename}")
     tp = Path(filename).with_suffix('').name.split('_')
     theta = int(tp[1])
     phi = int(tp[3])
@@ -392,13 +392,14 @@ def angular_separation(colat1, long1, colat2, long2):
     -------
     1d `numpy.ndarray`, angular separation
     """
-    ang_sep = coordinates.angular_separation(long1, np.pi/2.-colat1, long2, np.pi/2 - colat2)
+    # ang_sep = coordinates.angular_separation(long1, np.pi/2.-colat1, long2, np.pi/2 - colat2)
+    cosdelta = np.sin(colat1) * np.sin(colat2) * np.cos(
+        (long1 - long2)) + np.cos(colat1) * np.cos(colat2)
 
-    # cosdelta = np.sin(colat1) * np.sin(colat2) * np.cos(
-    #     (long1 - long2)) + np.cos(colat1) * np.cos(colat2)
-    #
-    # cosdelta[cosdelta > 1] = 1.
-    # cosdelta[cosdelta < -1] = -1.
-    #
-    # ang_sep = np.arccos(cosdelta)
+    cosdelta[cosdelta > 1] = 1.
+    cosdelta[cosdelta < -1] = -1.
+
+    ang_sep = np.arccos(cosdelta)
     return ang_sep
+
+
