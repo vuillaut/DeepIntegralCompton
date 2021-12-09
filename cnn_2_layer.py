@@ -42,14 +42,8 @@ class BaseModel1:
     def get_model(self):
         model = tf.keras.Sequential()
         model.add(Conv2D(32,3,input_shape=(180,45,1), activation="relu"))
-        #model.add(MaxPool2D((2,2)))
         model.add(BatchNormalization())
         model.add(Conv2D(64,3, activation="relu"))
-        #model.add(MaxPool2D((2,2)))
-        model.add(BatchNormalization())
-        model.add(Conv2D(128,3, activation="relu"))
-        model.add(BatchNormalization())
-        model.add(Conv2D(256,3, activation="relu"))
         model.add(BatchNormalization())
  
         model.add(Flatten())
@@ -95,6 +89,7 @@ class BaseModel1:
         print("Mean angular separation : {}".format(np.mean(angular_seps)))
         plt.title("Angular separation after training {}".format(self.name))
         plt.xlabel("Angular separation (deg)")
+        plt.ylabel("Separation (deg)")
         plt.savefig("./models/{}/angular_separation_distribution.png".format(self.name))
 
         plt.figure()
