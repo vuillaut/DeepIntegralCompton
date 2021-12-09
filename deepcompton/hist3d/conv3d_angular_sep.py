@@ -18,9 +18,13 @@ import matplotlib .pyplot as plt
 
 dic = np.load("dic_theta_phi_delta.npy", allow_pickle=True)[0]
 
-keys = (list(dic.keys()))
+from deepcompton.cones import AnglesDataset
+ad = AnglesDataset()
+ad.load('../../../Data/angles_dataset.pkl')
 
-size_keys = np.shape(keys)[0]
+# keys = (list(dic.keys()))
+# size_keys = np.shape(keys)[0]
+size_keys = len(ad.tab)
 
 nmin_cones = 100
 nmax_cones = 2000
@@ -41,21 +45,28 @@ def create_data(batch_size):
 
     for i in range(batch_size):
         index = np.random.randint(size_keys)
-        key_cur = keys[index]
-        list_evnt = dic[key_cur]
+        # key_cur = keys[index]
+        # list_evnt = dic[key_cur]
+        row = ad.tab[index]
+        list_evnt = np.transpose([row['theta'].data, row['phi'].data, row['cotheta'].data])
+        src_theta = float(row['src_theta'])
+        src_phi = float(row['src_phi'])
         n_cones = np.random.randint(nmin_cones, nmax_cones)
         size_list_evnt = np.shape(list_evnt)[0]
         index_evnt_sel = np.random.randint(size_list_evnt, size=n_cones)
         list_evnt_sel = list_evnt[index_evnt_sel]
+
+
 
         hist_3d, bx = np.histogramdd(list_evnt_sel, bins=[size_th, size_phi, size_delta],
                                      range=[(0, max_th), (0, max_phi), (0, max_delta)])
 
         X_val[i, :, :, :, 0] = hist_3d / np.sum(hist_3d)
 
-        Y_val[i, 0] = (key_cur[0]) / 90
-
-        Y_val[i, 1] = (key_cur[1]) / 360
+        # Y_val[i, 0] = (key_cur[0]) / 90
+        # Y_val[i, 1] = (key_cur[1]) / 360
+        Y_val[i, 0] = src_theta/90.
+        Y_val[i, 1] = src_phi/360.
 
     return X_val, Y_val
 
@@ -153,7 +164,8 @@ if __name__ == '__main__':
     model.add(Dense(2, activation=None, kernel_initializer='he_normal'))
 
     print(model.summary())
-    opt = optimizers.adam(lr=0.00001)
+    # opt = optimizers.get('adam')(learning_rate=0.00001)
+    opt = optimizers.adam_v2.Adam(learning_rate=0.00001)
 
     model.compile(loss=cos_angular_separation_tf, optimizer=opt, metrics=[angular_separation_tf])
 
