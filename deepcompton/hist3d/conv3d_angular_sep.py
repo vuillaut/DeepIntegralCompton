@@ -38,6 +38,13 @@ test_ad.save('test_dataset.pkl')
 # for the rest we use train_ad
 ad = train_ad
 
+### ADDING NOISE
+noise_filename = '../../../Data/real_noise.npy'
+noise = np.load(noise_filename)
+ad.extend_with_noise(noise_array=noise, max_length=ad.lengths.max()*2)
+
+ad.tab = ad.tab_extended
+
 # keys = (list(dic.keys()))
 # size_keys = np.shape(keys)[0]
 size_keys = len(ad.tab)
