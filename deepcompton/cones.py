@@ -217,12 +217,24 @@ class AnglesDataset:
         test_ad.tab = test_tab
         return train_ad, test_ad
 
+    @property
+    def lengths(self):
+        return np.array([len(row['theta']) for row in self.tab])
 
-    def extend(self, value=0):
+    def extend(self, value=0, max_length=None):
+        """
+        :param value: float
+            value to extend the tables with
+        :param max_length: int
+            final length of the arrays. if None, the length of the greatest array is used.
+            must be greater than the length of the greatest array (self.lengths.max())
+        :return:
+        """
         if 'tab' not in self.__dict__.keys():
             raise AttributeError("You must load or generate the base table first")
 
-        lengths = np.array([len(t['theta']) for t in self.tab])
+        lengths = self.lengths
+        max_length = lengths.max() if max_length is None else max_length
         selected_rows = self.tab[lengths > 1000]
         cols = ['theta', 'phi', 'cotheta']
         redim_cols = {col: [] for col in selected_rows.colnames}
@@ -230,7 +242,7 @@ class AnglesDataset:
         redim_cols['src_phi'] = selected_rows['src_phi']
         for row in selected_rows:
             for col in cols:
-                redim_cols[col].append(np.concatenate([row[col], value*np.ones(lengths.max() - len(row[col]))]))
+                redim_cols[col].append(np.concatenate([row[col], value*np.ones(max_length - len(row[col]))]))
 
         for name, col in redim_cols.items():
             redim_cols[name] = np.array(col)
