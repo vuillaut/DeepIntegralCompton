@@ -17,7 +17,7 @@ def main(theta_source=42, phi_source=104):
 
 
     name = pkg_resources.resource_filename('deepcompton', f'data/theta_{theta_source}_phi_{phi_source}.npy')
-    name = "save_Compton/theta_{}_phi_{}.npy".format(theta_source, phi_source)
+    # name = "save_Compton/theta_{}_phi_{}.npy".format(theta_source, phi_source)
     if not os.path.exists(name):
         print("File {} not found. Exiting".format(name))
         exit()
