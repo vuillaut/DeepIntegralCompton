@@ -95,7 +95,7 @@ if __name__=="__main__":
     datapath = "UncertaintiesDataset.pkl"
     x,y= pkl.load(open(datapath, "rb"))
     x = np.array(x).reshape(len(x),180,45,1)
-    y = np.radians(np.array(y))
+    y = np.radians(np.array(y))[:,:2]
 
     # standardize the data
     x = standardize(x)
