@@ -34,7 +34,7 @@ def standardize(x):
     return x
 
 class BaseModel1:
-    def __init__(self, name="model"):
+    def __init__(self, name="model", lr=1.e-4, max_epochs=1000):
         self.name = name
         self.lr = 1e-4
         self.max_epochs = 1
@@ -87,6 +87,10 @@ class BaseModel1:
 
 from deepcompton.datasets.single_source_densities import SingleSourceDensityDataset
 if __name__=="__main__":
+    import sys
+    name = sys.argv[1]
+    lr = float(sys.argv[2])
+    maxep = int(sys.argv[3])
     # load the data here
     datapath = "UncertaintiesDataset.pkl"
     x,y= pkl.load(open(datapath, "rb"))
@@ -101,5 +105,5 @@ if __name__=="__main__":
     y_train = tf.convert_to_tensor(y_train)
     x_train = tf.convert_to_tensor(x_train)
 
-    m = BaseModel1("test_model")
+    m = BaseModel1(name, lr, maxep)
     m.train(x_train, y_train, x_test, y_test)
