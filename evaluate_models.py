@@ -41,7 +41,7 @@ for f in os.listdir(models_dir):
                 for i in range(len(realx)):
                     y_pred = model(realx[i].reshape(1,180,45,1))
                     y_real = np.radians(np.array([theta, phi]))
-                    ang_sep.append(angular_separation(y_real[0], y_real[1], y_pred[0], y_pred[1])*180./np.pi)
+                    ang_sep.append(angular_separation(np.array([y_real[0]]), np.array([y_real[1]]), np.array([y_pred[0]]), np.array([y_pred[1]]))*180./np.pi)
                     total_sep+=ang_sep
                 model_separations[model_name].append([theta,phi], ang_sep)
             mean_separations[m] = np.mean(total_sep)
