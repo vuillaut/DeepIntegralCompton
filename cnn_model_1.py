@@ -34,10 +34,11 @@ def standardize(x):
     return x
 
 class BaseModel1:
-    def __init__(self, name="model", lr=1.e-4, max_epochs=1000):
+    def __init__(self, name="model", lr=1.e-4, max_epochs=1000, patience = 1):
         self.name = name
         self.lr = lr
         self.max_epochs = max_epochs
+        self.patience = patience
     def get_model(self):
         model = tf.keras.Sequential()
         model.add(Conv2D(32,3,input_shape=(180,45,1), activation="relu"))
@@ -69,7 +70,7 @@ class BaseModel1:
  
         callbacks =[
                 tf.keras.callbacks.ModelCheckpoint("./models/{}/weights.hdf5".format(self.name), monitor="val_loss"),
-                tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=10),
+                tf.keras.callbacks.EarlyStopping(monitor="val_loss", patience=self.patience),
         ]
         
         model = self.get_model()
@@ -122,6 +123,7 @@ if __name__=="__main__":
     name = sys.argv[1]
     lr = float(sys.argv[2])
     maxep = int(sys.argv[3])
+    patience = int(sys.argv[4])
     # load the data here
     datapath = "UncertaintiesDataset.pkl"
     x,y= pkl.load(open(datapath, "rb"))
@@ -136,5 +138,5 @@ if __name__=="__main__":
     y_train = tf.convert_to_tensor(y_train)
     x_train = tf.convert_to_tensor(x_train)
 
-    m = BaseModel1(name, lr, maxep)
+    m = BaseModel1(name, lr, maxep, patience)
     m.train(x_train, y_train, x_test, y_test)
