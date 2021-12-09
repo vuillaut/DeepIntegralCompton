@@ -36,8 +36,8 @@ def standardize(x):
 class BaseModel1:
     def __init__(self, name="model", lr=1.e-4, max_epochs=1000):
         self.name = name
-        self.lr = 1e-4
-        self.max_epochs = 1
+        self.lr = lr
+        self.max_epochs = max_epochs
     def get_model(self):
         model = tf.keras.Sequential()
         model.add(Conv2D(32,3,input_shape=(180,45,1), activation="elu"))
