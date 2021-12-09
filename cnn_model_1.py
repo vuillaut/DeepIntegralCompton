@@ -40,15 +40,27 @@ class BaseModel1:
         self.max_epochs = max_epochs
     def get_model(self):
         model = tf.keras.Sequential()
-        model.add(Conv2D(32,3,input_shape=(180,45,1), activation="elu"))
-        model.add(MaxPool2D((3,3)))
-        model.add(Conv2D(64,3, activation="elu"))
-        model.add(MaxPool2D((3,3)))
-        model.add(Conv2D(128,3, activation="elu"))
+        model.add(Conv2D(32,3,input_shape=(180,45,1), activation="relu"))
+        #model.add(MaxPool2D((2,2)))
         model.add(BatchNormalization())
+        model.add(Conv2D(64,3, activation="relu"))
+        #model.add(MaxPool2D((2,2)))
+        model.add(BatchNormalization())
+        model.add(Conv2D(128,3, activation="relu"))
+        model.add(BatchNormalization())
+        model.add(Conv2D(256,3, activation="relu"))
+        model.add(BatchNormalization())
+ 
         model.add(Flatten())
-        model.add(Dense(512,activation="elu"))
+        model.add(Dense(512,activation="relu"))
         model.add(BatchNormalization())
+        model.add(Dense(256,activation="relu"))
+        model.add(BatchNormalization())
+        model.add(Dense(128,activation="relu"))
+        model.add(BatchNormalization())
+        model.add(Dense(64,activation="relu"))
+        model.add(BatchNormalization())
+  
         model.add(Dense(2, activation="relu"))
         return model
     def train(self, x_train, y_train, x_test, y_test):
@@ -71,7 +83,7 @@ class BaseModel1:
         hist = model.fit(x_train, y_train, batch_size=256, epochs=self.max_epochs, callbacks=callbacks, validation_split=.2)
        
         # save the history
-        pkl.dump(hist, open("./models/{}/hist.pkl".format(self.name), "wb"))
+        pkl.dump(hist.history, open("./models/{}/hist.pkl".format(self.name), "wb"))
         self.make_test_outputs(model, x_test, y_test)
     def make_test_outputs(self, model, x_test, y_test):
         y_pred = model(x_test).numpy()
