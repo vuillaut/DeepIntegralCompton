@@ -1,7 +1,7 @@
 import numpy as np
 import os
 from astropy.table import Table
-from tqdm import tqdm
+from tqdm.auto import tqdm
 import pickle
 
 from .utils import load_data
@@ -149,16 +149,22 @@ class AnglesDataset:
         for filename in tqdm(filenames):
             try:
                 data, src_theta, src_phi = load_data(filename)
-            except:
+            except ValueError:
                 print(f"no data for {filename}")
                 continue
             try:
                 theta, phi, cotheta = np.apply_along_axis(make_cone, axis=1, arr=data).T
+                mask = np.isfinite(theta) & np.isfinite(phi) & np.isfinite(cotheta)
+                theta = theta[mask]
+                phi = phi[mask]
+                cotheta = cotheta[mask]
+
                 src_thetas.append(src_theta)
                 src_phis.append(src_phi)
                 thetas.append(theta)
                 phis.append(phi)
                 cothetas.append(cotheta)
+
             except:
                 print(f"fail for {filename}")
 
@@ -232,7 +238,7 @@ class AnglesDataset:
 
         self.tab_gold = Table(data=redim_cols)
 
-    def save_golden(self, filename='gold_angles.hdf5', **kwargs):
+    def save_golden(self, filename='gold_angles.h5', **kwargs):
         """
         save in HDF5 format
 
@@ -243,7 +249,7 @@ class AnglesDataset:
         kwargs['path'] = 'angles'
         write_table_hdf5(self.tab_gold, filename, **kwargs)
 
-    def load_golden(self, filename='gold_angles.hdf5'):
+    def load_golden(self, filename='gold_angles.h5'):
         self.tab_gold = Table.read(filename, path='angles')
 
 
