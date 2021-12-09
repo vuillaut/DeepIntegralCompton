@@ -76,18 +76,27 @@ def createSample(line,nbOfSample, nbOfPhotonsMin, nbOfPhotonsMax, maskValue):
 
 
 def performUnitSample(nbOfPhotonsMin, nbOfPhotonsMax, thetaVector, cothetaVector, phiVector, maskValue):
-  nbOfPhotons = np.random.randint(nbOfPhotonsMin,nbOfPhotonsMax)
-  indexesAleatoires = np.random.randint(thetaVector.size, size = nbOfPhotons)
+    """
 
-  sampledPhi = maskValue*np.ones(nbOfPhotonsMax)
-  sampledCotheta = maskValue*np.ones(nbOfPhotonsMax)
-  sampledTheta = maskValue*np.ones(nbOfPhotonsMax)
-  
-  sampledPhi[0:nbOfPhotons]=phiVector[indexesAleatoires]
-  sampledCotheta[0:nbOfPhotons]= cothetaVector[indexesAleatoires]
-  sampledTheta[0:nbOfPhotons]= thetaVector[indexesAleatoires]
+    :param nbOfPhotonsMin: int
+    :param nbOfPhotonsMax: int
+    :param thetaVector:
+    :param cothetaVector:
+    :param phiVector:
+    :param maskValue: float
+        value to fill
+    :return: np.array(sampledPhi), np.array(sampledCotheta), np.array(sampledTheta)
+        arrays of size nbOfPhotonsMax
+    """
+    nbOfPhotons = np.random.randint(nbOfPhotonsMin,nbOfPhotonsMax)
+    indexesAleatoires = np.random.randint(thetaVector.size, size = nbOfPhotons)
 
-  return np.array(sampledPhi), np.array(sampledCotheta), np.array(sampledTheta) 
+    sampledPhi = maskValue*np.ones(nbOfPhotonsMax)
+    sampledCotheta = maskValue*np.ones(nbOfPhotonsMax)
+    sampledTheta = maskValue*np.ones(nbOfPhotonsMax)
 
+    sampledPhi[0:nbOfPhotons]=phiVector[indexesAleatoires]
+    sampledCotheta[0:nbOfPhotons]= cothetaVector[indexesAleatoires]
+    sampledTheta[0:nbOfPhotons]= thetaVector[indexesAleatoires]
 
-
+    return np.array(sampledPhi), np.array(sampledCotheta), np.array(sampledTheta)
