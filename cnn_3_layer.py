@@ -104,7 +104,7 @@ class BaseModel1:
         plt.figure()
         plt.plot(history.history["angle"], label="separation")
         plt.plot(history.history["val_angle"], label="val_separation")
-        plt.title("Angular separation {}".format(self.name)
+        plt.title("Angular separation {}".format(self.name))
         plt.xlabel("Epochs")
         plt.ylabel("Angular separation (deg)")
         plt.savefig("./models/{}/angular_separation.png".format(self.name))
@@ -120,6 +120,7 @@ if __name__=="__main__":
     lr = float(sys.argv[2])
     maxep = int(sys.argv[3])
     patience = int(sys.argv[4])
+    datapath=sys.argv[5]
     # load the data here
     datapath = "UncertaintiesDataset.pkl"
     x,y= pkl.load(open(datapath, "rb"))

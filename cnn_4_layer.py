@@ -122,6 +122,7 @@ if __name__=="__main__":
     lr = float(sys.argv[2])
     maxep = int(sys.argv[3])
     patience = int(sys.argv[4])
+    datapath=sys.argv[5]
     # load the data here
     datapath = "UncertaintiesDataset.pkl"
     x,y= pkl.load(open(datapath, "rb"))
