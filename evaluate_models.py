@@ -56,7 +56,7 @@ plt.figure()
 title_set = False
 for m in model_separations:
     if not title_set:
-        [theta,phi]=model_separation[m][0]
+        [theta,phi]=model_separations[m][0]
         plt.title("{} - Angular separation as function of cones\ntheta:{}, phi:{}".format(m, theta, phi))
         title_set = True
     plt.plot(n_cones, model_separations[m][0][1], label = m)
@@ -70,7 +70,7 @@ plt.figure()
 title_set = False
 for m in model_separations:
     if not title_set:
-        [theta,phi]=model_separation[m][1]
+        [theta,phi]=model_separations[m][1]
         plt.title("{} - Angular separation as function of cones\ntheta:{}, phi:{}".format(m, theta, phi))
         title_set = True
     plt.plot(n_cones, model_separations[m][1][1], label = m)
