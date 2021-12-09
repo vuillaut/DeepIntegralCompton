@@ -85,7 +85,7 @@ class BaseModel1:
         plt.savefig("./models/{}/angular_separation_distribution.png".format(self.name))
         
 
-from deepcompton.datasets.single_source_densities import SingleSourceDensityDataset
+#from deepcompton.datasets.single_source_densities import SingleSourceDensityDataset
 if __name__=="__main__":
     import sys
     name = sys.argv[1]
