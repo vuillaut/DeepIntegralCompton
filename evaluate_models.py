@@ -11,11 +11,15 @@ model_scores = {}
 model_separations = {}
 mean_separations = {}
 # real data images are stored in a pickle file
-real_data = pkl.load(open("real_data"))
 n_cones = np.arange(100, 2000, 50)
-def save_perfhist():
-    pass
 
+from deepcompton.utils import angular_separation
+def angular_loss(y_true, y_pred):
+    return -1. * (tf.math.sin(y_true[:,0])*tf.math.sin(y_pred[:,0])*
+                  tf.math.cos(y_true[:,1]-y_pred[:,1])+
+                  tf.math.cos(y_pred[:,0])*tf.math.cos(y_true[:,0]))
+def angle(yt,yp):
+    return tf.math.acos(-1.*angular_loss(yt,yp)) * 180. / np.pi
 
 for f in os.listdir(models_dir):
     dirpath = os.path.join(models_dir, f)
@@ -23,9 +27,9 @@ for f in os.listdir(models_dir):
     model_separations[model_name]=[]
 
     for filename in os.listdir(dirpath):
-        if filename.endwith(".hdf5"):
+        if filename.endswith(".hdf5"):
             model_filename = os.path.join(dirpath, filename)
-            model = tf.keras.load_model(model_filename)
+            model = tf.keras.models.load_model(model_filename, custom_objects={"angular_loss":angular_loss, "angle":angle})
             total_sep = []
             print("Model : {}".format(model_name))
             for real_filename in realdatadir:
