@@ -130,7 +130,7 @@ def angular_separation_np(y_true, y_pred):
     return ang_sep
 
 
-def cos_angular_separation(y_true, y_pred):
+def cos_angular_separation_tf(y_true, y_pred):
     """
     Compute the angular separation in radians
     between two pointing direction given with lat-long
@@ -160,7 +160,7 @@ def cos_angular_separation(y_true, y_pred):
 
 # keras.losses.custom_loss = cos_angular_separation
 
-model = load_model("model_1.hdf5", custom_objects={'cos_angular_separation': cos_angular_separation,
+model = load_model("model_1.hdf5", custom_objects={'cos_angular_separation': cos_angular_separation_tf,
                                                    'angular_separation': angular_separation})
 
 batch_test = 1000
@@ -177,7 +177,7 @@ plt.xlabel("Angular separation between simulated and predicted positions")
 plt.ylabel("Counts")
 plt.title("Mean angular separation: " + str(np.round(np.mean(ang_sep), 1)) + " degrees")
 
-stop
+
 i = np.random.randint(batch_test)
 y_pred_cur = Y_pred[i]
 y_test_cur = Y_test[i]
