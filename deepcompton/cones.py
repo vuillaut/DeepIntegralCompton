@@ -218,7 +218,7 @@ class AnglesDataset:
         return train_ad, test_ad
 
 
-    def extend(self):
+    def extend(self, value=0):
         if 'tab' not in self.__dict__.keys():
             raise AttributeError("You must load or generate the base table first")
 
@@ -230,7 +230,7 @@ class AnglesDataset:
         redim_cols['src_phi'] = selected_rows['src_phi']
         for row in selected_rows:
             for col in cols:
-                redim_cols[col].append(np.concatenate([row[col], np.zeros(lengths.max() - len(row[col]))]))
+                redim_cols[col].append(np.concatenate([row[col], value*np.ones(lengths.max() - len(row[col]))]))
 
         for name, col in redim_cols.items():
             redim_cols[name] = np.array(col)
