@@ -24,7 +24,7 @@ filename = '../../../Data/angles_dataset.pkl'
 if not os.path.exists(filename):
     filename = '/mustfs/MUST-DATA/glearn/workspaces/thomas/astroinfo21/Compton/Data/angles_dataset.pkl'
 
-# dic = np.load("dic_theta_phi_delta.npy", allow_pickle=True)[0]
+dic = np.load("dic_theta_phi_delta.npy", allow_pickle=True)[0]
 
 
 
@@ -48,9 +48,9 @@ ad.extend_with_noise(noise_array=noise, max_length=ad.lengths.max()*2)
 
 ad.tab = ad.tab_extended
 
-# keys = (list(dic.keys()))
-# size_keys = np.shape(keys)[0]
-size_keys = len(ad.tab)
+keys = (list(dic.keys()))
+size_keys = np.shape(keys)[0]
+# size_keys = len(ad.tab)
 
 nmin_cones = 100
 nmax_cones = 2000
@@ -71,8 +71,8 @@ def create_data(batch_size):
 
     for i in range(batch_size):
         index = np.random.randint(size_keys)
-        # key_cur = keys[index]
-        # list_evnt = dic[key_cur]
+        key_cur = keys[index]
+        list_evnt = dic[key_cur]
         row = ad.tab[index]
         list_evnt = np.transpose([row['theta'].data, row['phi'].data, row['cotheta'].data])
         src_theta = float(row['src_theta'])
@@ -85,8 +85,10 @@ def create_data(batch_size):
         phi, cotheta, theta = performUnitSample(nmin_cones, nmax_cones,
                                                 row['theta'], row['cotheta'], row['phi'],
                                                 0)
-        # TODO: replace 0 with noise data
         list_evnt_sel = np.transpose([theta, phi, cotheta])
+
+        ## TODO: remove
+        list_evnt_sel = dic[key_cur]
 
         hist_3d, bx = np.histogramdd(list_evnt_sel, bins=[size_th, size_phi, size_delta],
                                      range=[(0, max_th), (0, max_phi), (0, max_delta)])
@@ -194,8 +196,11 @@ if __name__ == '__main__':
     model.add(Dense(2, activation=None, kernel_initializer='he_normal'))
 
     print(model.summary())
-    opt = optimizers.Adam(learning_rate=0.00001)
-    # opt = optimizers.adam_v2.Adam(learning_rate=0.00001)  ## old keras version
+    learning_rate = 0.00001
+    try:
+        opt = optimizers.Adam(learning_rate=learning_rate)
+    except:
+        opt = optimizers.adam_v2.Adam(learning_rate=learning_rate)  ## macos keras version
 
     model.compile(loss=cos_angular_separation_tf, optimizer=opt, metrics=[angular_separation_tf])
 
