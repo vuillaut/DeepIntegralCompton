@@ -56,8 +56,8 @@ for f in os.listdir(models_dir):
             mean_separations[model_name] = np.mean(total_sep)
 
 # bar plot
-models_name = list(mean_separations.keys())
-means = list(mean_separations.values())
+models_name = np.array(list(mean_separations.keys()))
+means =np.array( list(mean_separations.values()))
 pos = np.argsort(means)
 
 y_pos = np.arange(len(means))
