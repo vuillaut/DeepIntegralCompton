@@ -61,12 +61,13 @@ means =np.array( list(mean_separations.values()))
 pos = np.argsort(means)
 
 y_pos = np.arange(len(means))
-plt.figure()
+plt.figure(figsize=(8,8))
 plt.title("Model performances")
 plt.bar(y_pos, means[pos])
 plt.xticks(y_pos, models_name)
 plt.ylabel("Mean angular separation (deg)")
 plt.xticks(rotation=45)
+plt.tight_layout()
 plt.savefig("model_perfs.png")
 
 # separation as function of number of cones for each theta, phi
