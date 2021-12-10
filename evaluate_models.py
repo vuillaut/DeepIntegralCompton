@@ -13,6 +13,8 @@ mean_separations = {}
 # real data images are stored in a pickle file
 n_cones = np.arange(100, 2000, 50)
 
+couples_tp=[]
+
 from deepcompton.utils import angular_separation
 def angular_loss(y_true, y_pred):
     return -1. * (tf.math.sin(y_true[:,0])*tf.math.sin(y_pred[:,0])*
@@ -48,37 +50,10 @@ for f in os.listdir(models_dir):
                     print(y_real , y_pred)
                     ang_sep.append(angular_separation(np.array([y_real[0]]), np.array([y_real[1]]), y_pred[0,0], y_pred[0,1])*180./np.pi)
                     total_sep+=ang_sep
-                model_separations[model_name].append(([theta,phi], ang_sep))
+                if not [theta,phi] in couples_tp:
+                    couples_tp.append([theta, phi])
+                model_separations[model_name].append(ang_sep)
             mean_separations[model_name] = np.mean(total_sep)
-
-# separation as function of number of cones for each theta, phi
-plt.figure()
-title_set = False
-for m in model_separations:
-    if not title_set:
-        [theta,phi]=model_separations[m][0]
-        plt.title("{} - Angular separation as function of cones\ntheta:{}, phi:{}".format(m, theta, phi))
-        title_set = True
-    plt.plot(n_cones, model_separations[m][0][1], label = m)
-plt.xlabel("Cones")
-plt.ylabel("Separation (deg)")
-plt.legend()
-plt.savefig("theta_{}_phi_{}_separation_cones.png".format(theta, phi))
-
-# separation as function of number of cones for each theta, phi
-plt.figure()
-title_set = False
-for m in model_separations:
-    if not title_set:
-        [theta,phi]=model_separations[m][1]
-        plt.title("{} - Angular separation as function of cones\ntheta:{}, phi:{}".format(m, theta, phi))
-        title_set = True
-    plt.plot(n_cones, model_separations[m][1][1], label = m)
-plt.xlabel("Cones")
-plt.ylabel("Separation (deg)")
-plt.legend()
-plt.savefig("theta_{}_phi_{}_separation_cones.png".format(theta, phi))
-
 
 # bar plot
 models_name = list(mean_separations.keys())
@@ -92,3 +67,32 @@ plt.bar(y_pos, means[pos])
 plt.xticks(y_pos, models_name)
 plt.ylabel("Mean angular separation (deg)")
 plt.savefig("model_perfs.png")
+
+# separation as function of number of cones for each theta, phi
+plt.figure()
+title_set = False
+for m in model_separations:
+        [theta,phi] = couples_tp[0]
+        plt.title("{} - Angular separation as function of cones\ntheta:{}, phi:{}".format(m, theta, phi))
+        title_set = True
+    plt.plot(n_cones, np.array(model_separations[m][0]).flatten(), label = m)
+plt.xlabel("Cones")
+plt.ylabel("Separation (deg)")
+plt.legend()
+plt.savefig("theta_{}_phi_{}_separation_cones.png".format(theta, phi))
+
+# separation as function of number of cones for each theta, phi
+plt.figure()
+title_set = False
+for m in model_separations:
+    if not title_set:
+        [theta,phi]=couple_tp[1]
+        plt.title("{} - Angular separation as function of cones\ntheta:{}, phi:{}".format(m, theta, phi))
+        title_set = True
+    plt.plot(n_cones, np.array(model_separations[m][1]).flatten(), label = m)
+plt.xlabel("Cones")
+plt.ylabel("Separation (deg)")
+plt.legend()
+plt.savefig("theta_{}_phi_{}_separation_cones.png".format(theta, phi))
+
+
