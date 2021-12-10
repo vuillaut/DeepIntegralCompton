@@ -62,7 +62,7 @@ pos = np.argsort(means)
 
 y_pos = np.arange(len(means))
 plt.figure(figsize=(8,8))
-plt.title("Model performances")
+plt.title("Model performances on real data")
 plt.bar(y_pos, means[pos])
 plt.xticks(y_pos, models_name)
 plt.ylabel("Mean angular separation (deg)")
