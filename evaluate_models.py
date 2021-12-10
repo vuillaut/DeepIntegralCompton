@@ -72,6 +72,7 @@ plt.savefig("model_perfs.png")
 plt.figure()
 title_set = False
 for m in model_separations:
+    if not title_set
         [theta,phi] = couples_tp[0]
         plt.title("{} - Angular separation as function of cones\ntheta:{}, phi:{}".format(m, theta, phi))
         title_set = True
