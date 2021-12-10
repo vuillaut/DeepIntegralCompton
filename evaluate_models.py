@@ -66,6 +66,7 @@ plt.title("Model performances")
 plt.bar(y_pos, means[pos])
 plt.xticks(y_pos, models_name)
 plt.ylabel("Mean angular separation (deg)")
+plt.xticks(rotation=45)
 plt.savefig("model_perfs.png")
 
 # separation as function of number of cones for each theta, phi
