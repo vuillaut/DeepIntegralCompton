@@ -66,7 +66,7 @@ plt.title("Model performances on real data")
 plt.bar(y_pos, means[pos])
 plt.xticks(y_pos, models_name)
 plt.ylabel("Mean angular separation (deg)")
-plt.xticks(rotation=45)
+plt.xticks(rotation=45, ha="right")
 plt.tight_layout()
 plt.savefig("model_perfs.png")
 
